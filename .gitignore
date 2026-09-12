@@ -1,0 +1,51 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Runtime state
+data/*.db
+data/*.db-*
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Local environments and caches
+.venv/
+.uv-cache/
+
+# Generated runtime output
+output/
+logs/
+*.log
+
+# Local model weights and vector database volumes
+models/
+milvus/volumes*/
+
+# Local source documents and evaluation documents
+doc/
+doc_eval/
+
+# IDE settings
+.vscode/
+.idea/
+
+# Local-only experimental code
+app/clients/mongo_history_utils_new.py
+app/config/
+app/import_process/config/
+scripts/probe_mcp_*.py
+scripts/resume_doc_eval_import.py
+scripts/rejudge_answer.py
+
+# Local evaluation datasets
+eval/*.jsonl

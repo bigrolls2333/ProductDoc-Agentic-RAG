@@ -1,0 +1,23 @@
+请从以下信息中识别出文档主产品实体，并输出 JSON：
+文件名：{file_title}
+
+正文切片（用于辅助识别）：
+{context}
+
+要求：
+1. 只返回 JSON 对象，不要输出 Markdown、解释或代码块。
+2. canonical_name 优先采用“品牌 + 空格 + 型号 + 品类”，例如“H3C LA2608室内无线网关”。
+3. 不要把“用户手册、整本手册、产品安全手册、配置指南、安装指南、6W100、Rxxxx、日期、版本号”等文档属性放进 canonical_name。
+4. aliases 放简称和常见叫法，例如“LA2608”、“H3C LA2608”、“H3CLA2608”、“LA2608室内无线网关”。
+5. 无法确定的字段填空字符串，confidence 填 0 到 1 之间的小数。
+
+JSON格式：
+{{
+  "canonical_name": "",
+  "brand": "",
+  "model_code": "",
+  "category": "",
+  "aliases": [],
+  "confidence": 0.0,
+  "evidence": ""
+}}
