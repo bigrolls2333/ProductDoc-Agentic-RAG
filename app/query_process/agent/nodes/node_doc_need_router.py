@@ -1,3 +1,5 @@
+"""Decide whether a query requires new evidence or can reuse context."""
+
 import json
 import re
 import sys
@@ -83,7 +85,7 @@ def _looks_context_reuse_query(query: str) -> bool:
 
 
 def _merge_evidence(bundle_evidence: list, history_evidence: list) -> list:
-    """合并 context_bundle 证据 + 历史对话证据，按 chunk_id 去重，上限 6 条。"""
+    """Merge and deduplicate bounded evidence from context and history."""
     seen_ids = set()
     merged = []
     for doc in (bundle_evidence or []) + (history_evidence or []):
@@ -176,7 +178,7 @@ def _llm_decide_context_sufficiency(state: QueryGraphState, evidence_docs: list)
                 "doc_need_confidence": confidence,
             }
     except Exception as e:
-        logger.error(f"上下文充分性LLM判断失败，降级为检索: {e}", exc_info=True)
+        logger.error(f"Context sufficiency decision failed; routing to retrieval: {e}", exc_info=True)
 
     return {
         "doc_need_route": "need_retrieval",
@@ -191,7 +193,7 @@ def decide_doc_need(state: QueryGraphState) -> dict:
     item_names = state.get("item_names") or []
     history = state.get("history") or []
 
-    # 【新】优先从 context_bundle 中读取 session_memory 中的证据文档
+    # Prefer bounded evidence assembled by the context node.
     context_bundle = state.get("context_bundle") or {}
     bundle_evidence = context_bundle.get("recent_evidence_docs") or []
 
@@ -210,7 +212,6 @@ def decide_doc_need(state: QueryGraphState) -> dict:
             "doc_need_reason": "latest_answer_without_evidence",
         }
 
-    # 合并 context_bundle 证据 + 历史对话中的 evidence_docs
     history_evidence = _recent_evidence_docs(history)
     evidence_docs = _merge_evidence(bundle_evidence, history_evidence)
 
@@ -233,7 +234,6 @@ def decide_doc_need(state: QueryGraphState) -> dict:
         result = _llm_decide_context_sufficiency(state, evidence_docs)
         if result["doc_need_route"] == "answer_from_context":
             result["context_evidence_docs"] = evidence_docs
-            # 【新】answer_from_context 对外路由统一为 reuse_context_evidence
             result["doc_need_route"] = "reuse_context_evidence"
         return result
 
@@ -249,7 +249,7 @@ def node_doc_need_router(state: QueryGraphState) -> QueryGraphState:
     session_id = state["session_id"]
     is_stream = state.get("is_stream", False)
 
-    logger.info(">>> node_doc_need_router: 开始处理")
+    logger.info("node_doc_need_router started")
     add_running_task(session_id, node_name, is_stream)
 
     result = decide_doc_need(state)

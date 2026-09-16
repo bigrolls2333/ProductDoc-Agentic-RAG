@@ -1,5 +1,5 @@
-import re
-import os
+"""Select retrieval branches using an LLM planner with deterministic fallback."""
+
 import re
 import sys
 import json
@@ -14,9 +14,6 @@ from app.utils.task_utils import add_done_task, add_running_task
 from app.utils.eval_flag_utils import eval_mode, is_eval_enabled
 
 
-# ======================================================================
-# 旧的规则逻辑：保留作为 LLM 冱策失败时的 fallback
-# ======================================================================
 DOC_RETRIEVAL_KEYWORDS = [
     "怎么", "如何", "步骤", "配置", "安装", "接入", "连接", "设置", "重置",
     "参数", "规格", "支持", "默认", "地址", "指示灯", "故障", "报错",
@@ -42,10 +39,7 @@ def _contains_any(text: str, keywords) -> bool:
 
 
 def _rule_based_plan(state: QueryGraphState) -> Dict:
-    """
-    规则兜底版检索计划（LLM 失败时使用）。
-    保留原有行为：默认开本地向量检索，HyDE 用于模糊/短查询，Web 用于时效性查询。
-    """
+    """Build a deterministic retrieval plan for planner fallback."""
     query = (state.get("rewritten_query") or state.get("original_query") or "").strip()
 
     use_web = _contains_any(query, WEB_HINT_KEYWORDS)
@@ -80,10 +74,7 @@ def _parse_llm_json(content: str) -> dict:
 
 
 def _build_signal_hints(query: str) -> dict:
-    """
-    给 LLM 的规则信号提示（参考 node_query_intent 的做法），
-    让 LLM 决策时能兼顾关键词事实，避免漏掉明显特征。
-    """
+    """Build lightweight signals that support planner decisions."""
     return {
         "matched_web_hints": [kw for kw in WEB_HINT_KEYWORDS if kw.lower() in query.lower()],
         "matched_hyde_hints": [kw for kw in HYDE_HINT_KEYWORDS if kw.lower() in query.lower()],
@@ -93,12 +84,7 @@ def _build_signal_hints(query: str) -> dict:
 
 
 def _llm_decide_retrieval_plan(state: QueryGraphState) -> Dict:
-    """
-    让 LLM 作为 Agent 的工具选择器，决定本轮召回开启哪些分支。
-    输出严格 JSON，失败时由调用方走规则兜底。
-
-    改造后新增：注入 product_memory_hints 作为历史检索经验参考。
-    """
+    """Ask the planner to select retrieval branches for the current query."""
     query = (state.get("rewritten_query") or state.get("original_query") or "").strip()
     item_names = state.get("item_names") or []
     history = state.get("history") or []
@@ -107,7 +93,6 @@ def _llm_decide_retrieval_plan(state: QueryGraphState) -> Dict:
         for msg in history[-4:]
     )
 
-    # 【新】读取 ProductMemory 命中结果，用于 query expansion
     product_hints = {} if is_eval_enabled("EVAL_DISABLE_PRODUCT_MEMORY") else (state.get("product_memory_hints") or {})
     common_questions = product_hints.get("common_questions") or []
     product_hint_text = ""
@@ -174,21 +159,17 @@ def _llm_decide_retrieval_plan(state: QueryGraphState) -> Dict:
             "reason": (result.get("reason") or "llm_tool_selection").strip(),
             "decided_by": "llm",
         }
-        # 本地向量检索是默认手段，LLM 漏选时强制保底
         if not plan["use_embedding"] and not plan["use_web"] and not plan["use_hyde"]:
             plan["use_embedding"] = True
             plan["reason"] = (plan["reason"] + " | fallback: no tool selected, force embedding")
         return plan
     except Exception as e:
-        logger.error(f"LLM 检索计划决策失败，降级为规则兜底: {e}", exc_info=True)
+        logger.error(f"Retrieval planner failed; using rule fallback: {e}", exc_info=True)
         raise
 
 
 def build_retrieval_plan(state: QueryGraphState) -> Dict:
-    """
-    构建检索计划：优先用 LLM 作为 Agent 工具选择器决策，
-    LLM 失败时降级为规则逻辑，保证主链路稳定。
-    """
+    """Build an LLM-guided plan with rule and evaluation overrides."""
     force_planner = eval_mode("EVAL_FORCE_PLANNER")
     if force_planner == "embedding_only":
         plan = {
@@ -222,7 +203,7 @@ def node_retrieval_plan(state: QueryGraphState) -> QueryGraphState:
     session_id = state["session_id"]
     is_stream = state.get("is_stream", False)
 
-    logger.info(">>> node_retrieval_plan: 开始处理（Agent 工具选择）")
+    logger.info("node_retrieval_plan started")
     add_running_task(session_id, node_name, is_stream)
 
     plan = build_retrieval_plan(state)

@@ -1,3 +1,5 @@
+"""Configuration for Redis-backed task state and coordination."""
+
 from dataclasses import dataclass
 import os
 from dotenv import load_dotenv

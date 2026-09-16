@@ -1,3 +1,5 @@
+"""Redis-backed ownership lock for duplicate document uploads."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -9,12 +11,16 @@ from app.core.logger import logger
 
 @dataclass
 class UploadLockResult:
+    """Outcome of an upload ownership attempt."""
+
     acquired: bool
     lock_enabled: bool
     owner_task_id: str
 
 
 class RedisUploadLock:
+    """Acquire and release a document lock with an atomic Redis operation."""
+
     def __init__(self) -> None:
         self.prefix = redis_config.key_prefix.strip(":") or "rag"
         self.ttl_seconds = redis_config.upload_lock_ttl_seconds
@@ -23,6 +29,7 @@ class RedisUploadLock:
         return f"{self.prefix}:lock:upload:{doc_id}"
 
     def acquire(self, doc_id: str, task_id: str) -> UploadLockResult:
+        """Claim a document for a task, or return the current owner."""
         client = get_redis_client()
         if client is None:
             return UploadLockResult(acquired=True, lock_enabled=False, owner_task_id=task_id)
@@ -36,10 +43,11 @@ class RedisUploadLock:
             owner_task_id = client.get(key) or ""
             return UploadLockResult(acquired=False, lock_enabled=True, owner_task_id=owner_task_id)
         except Exception as e:
-            logger.warning(f"Redis上传锁获取失败，继续按无锁模式处理：doc_id={doc_id} error={e}")
+            logger.warning(f"Redis upload lock failed; continuing without lock: doc_id={doc_id}, error={e}")
             return UploadLockResult(acquired=True, lock_enabled=False, owner_task_id=task_id)
 
     def release(self, doc_id: str, task_id: str) -> None:
+        """Release the lock only when it is still owned by ``task_id``."""
         client = get_redis_client()
         if client is None:
             return
@@ -54,15 +62,17 @@ class RedisUploadLock:
         try:
             client.eval(script, 1, key, task_id)
         except Exception as e:
-            logger.warning(f"Redis上传锁释放失败：doc_id={doc_id} task_id={task_id} error={e}")
+            logger.warning(f"Redis upload lock release failed: doc_id={doc_id}, task_id={task_id}, error={e}")
 
 
 _upload_lock = RedisUploadLock()
 
 
 def acquire_upload_lock(doc_id: str, task_id: str) -> UploadLockResult:
+    """Acquire the process-wide upload lock."""
     return _upload_lock.acquire(doc_id=doc_id, task_id=task_id)
 
 
 def release_upload_lock(doc_id: str, task_id: str) -> None:
+    """Release the process-wide upload lock."""
     _upload_lock.release(doc_id=doc_id, task_id=task_id)

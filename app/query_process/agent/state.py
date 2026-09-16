@@ -1,61 +1,59 @@
+"""State contract shared by the query graph nodes."""
+
 from typing_extensions import TypedDict
 from typing import List
 import copy
 
 class QueryGraphState(TypedDict):
-    """
-    QueryGraphState 定义了整个查询流程中流转的数据结构。
-    """
-    session_id: str  # 会话唯一标识
-    original_query: str  # 用户原始问题
+    """Typed state exchanged by the query workflow."""
+    session_id: str  # Stable conversation identifier
+    original_query: str  # User-provided query
 
-    # 检索过程中的中间数据
-    embedding_chunks: list  # 普通向量检索回来的切片
-    hyde_embedding_chunks: list  # HyDE 检索回来的切片
-    web_search_docs: list  # 网络搜索回来的文档
+    # Retrieval results
+    embedding_chunks: list  # Dense/sparse retrieval results
+    hyde_embedding_chunks: list  # HyDE retrieval results
+    web_search_docs: list  # Web search results
 
-    # 排序过程中的数据
-    rrf_chunks: list  # RRF 融合排序后的切片
-    reranked_docs: list  # 重排序后的最终 Top-K 文档
-    rerank_trace: dict  # Rerank 调参与截断过程摘要
+    # Ranking results
+    rrf_chunks: list  # RRF-fused chunks
+    reranked_docs: list  # Final reranked Top-K documents
+    rerank_trace: dict  # Rerank and truncation summary
 
-    # 生成过程中的数据
-    prompt: str  # 组装好的 Prompt
-    answer: str  # 最终生成的答案
+    # Generation fields
+    prompt: str  # Rendered answer prompt
+    answer: str  # Final answer
 
-    # 辅助信息
-    item_names: List[str]  # 提取出的商品名称
-    rewritten_query: str  # 改写后的问题
-    history: list  # 历史对话记录
-    is_stream: bool  # 是否流式输出标记
-    query_route: str  # 查询路由：product_doc_qa / direct_answer / clarification / out_of_scope
-    direct_answer: str  # 意图识别阶段生成的直接回复
-    doc_need_route: str  # 文档检索需求路由：need_retrieval / direct_answer
-    doc_need_reason: str  # 文档检索需求路由原因
-    doc_need_confidence: float  # 文档检索需求路由置信度
-    retrieval_plan: dict  # 检索计划：开启哪些召回分支
-    context_evidence_docs: list  # 多轮追问复用的历史证据摘要
-    trace_started_at: float  # 查询trace开始时间戳
+    # Routing and context
+    item_names: List[str]  # Resolved product names
+    rewritten_query: str  # Normalized query
+    history: list  # Conversation history
+    is_stream: bool  # Whether the response is streamed
+    query_route: str  # product_doc_qa / direct_answer / clarification / out_of_scope
+    direct_answer: str  # Direct response from intent routing
+    doc_need_route: str  # need_retrieval / direct_answer
+    doc_need_reason: str  # Routing rationale
+    doc_need_confidence: float  # Routing confidence
+    retrieval_plan: dict  # Enabled retrieval branches
+    context_evidence_docs: list  # Evidence reused from prior turns
+    trace_started_at: float  # Trace start timestamp
 
-    # Agentic RAG：自评与重试
+    # Evidence evaluation and bounded retry
     self_eval_status: str  # "" | "sufficient" | "insufficient_retry" | "needs_clarification"
-    self_eval_retry_count: int  # 0 | 1（最多一次 web 重试）
-    self_eval_detail: dict  # LLM 评估的完整结果
+    self_eval_retry_count: int  # Bounded web retry count
+    self_eval_detail: dict  # Structured evaluation result
 
-    # ===== Agentic RAG 改造：上下文记忆与 Checkpoint =====
-    context_bundle: dict  # 上下文捆绑包（node_build_context 构建，包含历史消息/已确认商品/证据文档/答案摘要/待澄清任务）
-    thread_id: str  # LangGraph thread_id（等于 session_id，用于 checkpoint 恢复）
-    checkpoint_enabled: bool  # 当前运行是否启用 LangGraph checkpointer
-    resume_from_checkpoint: bool  # 本次调用是否从 checkpoint 恢复
-    product_memory_hints: dict  # 商品记忆命中（高频问题/检索策略/别名，用于 query expansion）
-    clarification_resolved: bool  # 澄清是否已解决（用户选择候选后设为 True）
-    pending_clarification_created: bool  # 本轮是否新创建待澄清任务
-    run_id: str  # 项目级运行元数据 ID
+    # Memory, checkpoint, and run metadata
+    context_bundle: dict  # Assembled conversation and evidence context
+    thread_id: str  # LangGraph thread identifier
+    checkpoint_enabled: bool  # Whether checkpoint persistence is enabled
+    resume_from_checkpoint: bool  # Whether this invocation resumes state
+    product_memory_hints: dict  # Product-memory signals for query expansion
+    clarification_resolved: bool  # Whether the pending clarification was resolved
+    pending_clarification_created: bool  # Whether this turn created a clarification
+    run_id: str  # Run metadata identifier
 
 
-# ========================
-# 默认状态（全部为空）
-# ========================
+# Empty defaults keep state construction deterministic.
 query_graph_default_state: QueryGraphState = {
     "session_id": "",
     "original_query": "",
@@ -82,7 +80,6 @@ query_graph_default_state: QueryGraphState = {
     "self_eval_status": "",
     "self_eval_retry_count": 0,
     "self_eval_detail": {},
-    # Agentic RAG 改造：新增默认值
     "context_bundle": {},
     "thread_id": "",
     "checkpoint_enabled": False,
@@ -94,50 +91,20 @@ query_graph_default_state: QueryGraphState = {
 }
 
 
-# ========================
-# 创建默认状态（可覆盖）
-# ========================
 def create_query_default_state(**overrides) -> QueryGraphState:
-    """
-    创建查询流程的默认状态，支持覆盖字段
-    """
+    """Create an isolated query state and apply optional field overrides."""
     state = copy.deepcopy(query_graph_default_state)
     state.update(overrides)
     return state
 
 
-# ========================
-# 获取干净状态
-# ========================
 def get_query_default_state() -> QueryGraphState:
+    """Return an isolated copy of the default query state."""
     return copy.deepcopy(query_graph_default_state)
 
 
-# ========================
-# ✅ 状态复制函数（你要的）
-# ========================
 def copy_query_state(state: QueryGraphState, **overrides) -> QueryGraphState:
-    """
-    复制现有状态并可覆盖字段，深拷贝，不污染原数据
-    """
+    """Copy a query state without sharing mutable values with the source."""
     new_state = copy.deepcopy(state)
     new_state.update(overrides)
     return new_state
-
-
-if __name__ == "__main__":
-    # 测试
-    state = create_query_default_state(
-        session_id="test_001",
-        original_query="华为P60怎么样?",
-        is_stream=False
-    )
-    print("初始化状态：", state)
-
-    # 复制状态
-    new_state = copy_query_state(
-        state,
-        original_query="修改后的问题"
-    )
-    print("复制后的状态：", new_state)
-

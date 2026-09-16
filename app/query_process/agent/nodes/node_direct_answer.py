@@ -1,3 +1,5 @@
+"""Handle query routes that do not require document retrieval."""
+
 import sys
 
 from app.clients.mongo_history_utils import save_chat_message
@@ -7,13 +9,14 @@ from app.utils.task_utils import add_done_task, add_running_task
 
 
 def node_direct_answer(state: QueryGraphState) -> QueryGraphState:
+    """Persist and return a direct response for non-retrieval queries."""
     node_name = sys._getframe().f_code.co_name
     session_id = state["session_id"]
     is_stream = state.get("is_stream", False)
     original_query = state.get("original_query", "")
     direct_answer = (state.get("direct_answer") or "").strip()
 
-    logger.info(">>> node_direct_answer: 开始处理")
+    logger.info("node_direct_answer started")
     add_running_task(session_id, node_name, is_stream)
 
     if not direct_answer:
@@ -32,8 +35,8 @@ def node_direct_answer(state: QueryGraphState) -> QueryGraphState:
             item_names=[],
         )
     except Exception as e:
-        logger.error(f"node_direct_answer: 保存用户消息失败: {e}", exc_info=True)
+        logger.error(f"node_direct_answer: failed to persist user message: {e}", exc_info=True)
 
     add_done_task(session_id, node_name, is_stream)
-    logger.info("node_direct_answer: 直接回复已写入 state.answer")
+    logger.info("node_direct_answer completed")
     return state

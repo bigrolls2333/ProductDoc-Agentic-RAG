@@ -1,3 +1,5 @@
+"""Classify query intent before product resolution and retrieval routing."""
+
 import json
 import re
 import sys
@@ -63,6 +65,7 @@ DIRECT_ANSWERS = {
 
 
 def _normalize_query(query: str) -> str:
+    """Normalize user input for deterministic routing checks."""
     return (query or "").strip()
 
 
@@ -215,7 +218,7 @@ def _llm_classify_query_intent(query: str, history: List[Dict]) -> Dict[str, str
                 "direct_answer": direct_answer or DIRECT_ANSWERS[intent],
             }
     except Exception as e:
-        logger.error(f"意图识别LLM分类失败，降级为直接提示: {e}", exc_info=True)
+        logger.error(f"Query intent classification failed; using direct-response fallback: {e}", exc_info=True)
 
     return _route("direct_answer", "smalltalk")
 
@@ -284,12 +287,13 @@ def _classify_follow_up_query(query: str, history: List[Dict]) -> Dict[str, str]
                 "direct_answer": direct_answer or DIRECT_ANSWERS[answer_key],
             }
     except Exception as e:
-        logger.error(f"多轮追问LLM分类失败，降级为澄清: {e}", exc_info=True)
+        logger.error(f"Follow-up classification failed; routing to clarification: {e}", exc_info=True)
 
     return _route("clarification")
 
 
 def classify_query_intent(query: str, history: List[Dict]) -> Dict[str, str]:
+    """Return a route using deterministic signals with an LLM fallback."""
     query = _normalize_query(query)
 
     if _is_invalid_query(query):
@@ -316,25 +320,25 @@ def node_query_intent(state: QueryGraphState) -> QueryGraphState:
     is_stream = state.get("is_stream", False)
     query = state.get("original_query", "")
 
-    logger.info(">>> node_query_intent: 开始处理")
+    logger.info("node_query_intent started")
     add_running_task(session_id, node_name, is_stream)
 
-    # 【改】优先使用 context_bundle 中的历史消息（已截断处理），减少重复 DB 查询
+    # Prefer the bounded history assembled by the context node.
     context_bundle = state.get("context_bundle") or {}
     bundle_history = context_bundle.get("history_messages") or []
 
     if bundle_history:
         history = bundle_history
-        logger.info(f"node_query_intent: 使用 context_bundle 历史消息，数量={len(history)}")
+        logger.info(f"node_query_intent: using context history, count={len(history)}")
     else:
         history = get_recent_messages(session_id, limit=10)
-        logger.info(f"node_query_intent: context_bundle 无历史消息，降级为直接查询 MongoDB，数量={len(history)}")
+        logger.info(f"node_query_intent: loaded history from MongoDB, count={len(history)}")
 
     result = classify_query_intent(query, history)
     state["query_route"] = result.get("query_route", "product_doc_qa")
     state["direct_answer"] = result.get("direct_answer", "")
 
-    # 保存历史到 state（若 context_bundle 未提供完整格式，则用 MongoDB 数据补充）
+    # Preserve the full history for downstream nodes when it was not preloaded.
     if not state.get("history"):
         state["history"] = history
 

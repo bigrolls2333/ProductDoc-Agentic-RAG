@@ -1,3 +1,5 @@
+"""Optional Redis client lifecycle and health helpers."""
+
 from __future__ import annotations
 
 from typing import Optional
@@ -35,7 +37,7 @@ def get_redis_client():
         import redis
     except ImportError:
         _redis_unavailable_reason = "python package 'redis' is not installed"
-        logger.warning(f"Redis未启用：{_redis_unavailable_reason}")
+        logger.warning(f"Redis unavailable: {_redis_unavailable_reason}")
         return None
 
     try:
@@ -60,11 +62,11 @@ def get_redis_client():
         client.ping()
         _redis_client = client
         _redis_unavailable_reason = None
-        logger.info("Redis客户端连接成功，任务状态将写入Redis")
+        logger.info("Redis client initialized; task state will use Redis")
         return _redis_client
     except Exception as e:
         _redis_unavailable_reason = str(e)
-        logger.warning(f"Redis连接不可用，任务状态回退到内存：{e}")
+        logger.warning(f"Redis connection unavailable; task state will use memory: {e}")
         return None
 
 
@@ -79,5 +81,5 @@ def check_redis_health() -> bool:
     try:
         return bool(client.ping())
     except Exception as e:
-        logger.warning(f"Redis健康检查失败：{e}")
+        logger.warning(f"Redis health check failed: {e}")
         return False

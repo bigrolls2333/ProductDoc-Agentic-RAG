@@ -1,15 +1,4 @@
-"""
-检索图（Query Graph）测试脚本 —— 对应 Agentic RAG 改造后的图结构。
-
-跑真实 query_app，覆盖三类场景：
-  1. 本地精确产品问题        —— 期望走本地召回，self_eval=sufficient
-  2. 本地大概率没有的时效性查询 —— 期望 self_eval=insufficient_retry 触发 web 补搜回路
-  3. 完全不相关的澄清类        —— 期望走 needs_clarification 拒答
-
-用法（从项目根目录运行）：
-    .venv/Scripts/python.exe app/test/05-test_query_flow.py
-    .venv/Scripts/python.exe app/test/05-test_query_flow.py --query "H3C LA2608 怎么接入4G网络"
-"""
+"""Exercise representative query-routing and retrieval scenarios."""
 import argparse
 import json
 import sys
@@ -17,7 +6,7 @@ import time
 import uuid
 from pathlib import Path
 
-# 让脚本在任何目录都能 import 到 app 包
+# Allow the script to run from any working directory.
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -87,7 +76,7 @@ def run_one(query: str) -> dict:
     preview = answer.replace("\n", " ")[:200]
     logger.info(f"[ANSWER] len={len(answer)}  preview={preview!r}")
 
-    # 兼容非流式结果读取（部分节点会把答案写进 task_result）
+    # Check the task store as a compatibility path for non-streaming runs.
     task_answer = get_task_result(session_id, "answer", "")
     if task_answer and not answer:
         logger.info(f"[TASK  ] task_result.answer preview={str(task_answer)[:200]!r}")
@@ -97,7 +86,7 @@ def run_one(query: str) -> dict:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--query", default="", help="单条自定义查询；不传则跑 3 个预设场景")
+    ap.add_argument("--query", default="", help="Run one custom query instead of the default scenarios.")
     args = ap.parse_args()
 
     if args.query:
@@ -105,10 +94,10 @@ def main():
         return
 
     scenarios = [
-        ("场景1-本地精确产品问题", "H3C LA2608 如何接入 3G/4G 网络？"),
-        ("场景2-本地大概率没有的时效性查询(应触发web补搜)",
+        ("local product query", "H3C LA2608 如何接入 3G/4G 网络？"),
+        ("time-sensitive query with web retry",
          "H3C LA2608 2026年最新固件版本号是多少"),
-        ("场景3-完全不相关澄清类", "今天天气怎么样"),
+        ("out-of-scope query", "今天天气怎么样"),
     ]
     for title, q in scenarios:
         logger.info("\n" + "#" * 70)

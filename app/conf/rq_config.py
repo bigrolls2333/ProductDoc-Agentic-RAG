@@ -1,3 +1,5 @@
+"""Configuration for the optional RQ ingestion queue."""
+
 from dataclasses import dataclass
 import os
 from dotenv import load_dotenv

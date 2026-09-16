@@ -1,3 +1,5 @@
+"""Task progress storage with Redis primary and in-memory fallback backends."""
+
 from __future__ import annotations
 
 from typing import Dict, List, Protocol
@@ -8,6 +10,8 @@ from app.core.logger import logger
 
 
 class TaskStore(Protocol):
+    """Storage interface used by the task progress facade."""
+
     def add_running(self, task_id: str, node_name: str) -> None: ...
     def add_done(self, task_id: str, node_name: str) -> None: ...
     def set_result(self, task_id: str, key: str, value: str) -> None: ...
@@ -20,6 +24,8 @@ class TaskStore(Protocol):
 
 
 class InMemoryTaskStore:
+    """Process-local task store for development and degraded operation."""
+
     def __init__(self) -> None:
         self._running: Dict[str, List[str]] = {}
         self._done: Dict[str, List[str]] = {}
@@ -74,6 +80,8 @@ class InMemoryTaskStore:
 
 
 class RedisTaskStore:
+    """Redis implementation of the task progress store."""
+
     def __init__(self, client) -> None:
         self.client = client
         self.prefix = redis_config.key_prefix.strip(":") or "rag"
@@ -167,6 +175,8 @@ class RedisTaskStore:
 
 
 class ResilientTaskStore:
+    """Route operations to Redis and fail over to the in-memory store."""
+
     def __init__(self, primary: TaskStore | None, fallback: InMemoryTaskStore) -> None:
         self.primary = primary
         self.fallback = fallback
@@ -178,7 +188,7 @@ class ResilientTaskStore:
                 return getattr(self.primary, method)(*args, **kwargs)
             except Exception as e:
                 self._primary_failed = True
-                logger.warning(f"Redis任务状态操作失败，后续回退到内存：{e}")
+                logger.warning(f"Redis task store unavailable; using in-memory fallback: {e}")
         return getattr(self.fallback, method)(*args, **kwargs)
 
     def add_running(self, task_id: str, node_name: str) -> None:
@@ -219,6 +229,6 @@ def get_task_store() -> ResilientTaskStore:
         redis_client = get_redis_client()
         primary = RedisTaskStore(redis_client) if redis_client is not None else None
         if primary is None:
-            logger.info("任务状态使用内存存储；如需Redis，请配置 REDIS_ENABLED=True 并启动Redis")
+            logger.info("Task progress store: in-memory backend")
         _task_store = ResilientTaskStore(primary=primary, fallback=_memory_store)
     return _task_store

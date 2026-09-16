@@ -1,3 +1,5 @@
+"""Public task-progress facade used by the HTTP and graph layers."""
+
 from typing import Dict, List
 from .sse_utils import push_to_session
 from .task_store import get_task_store
@@ -7,8 +9,7 @@ TASK_STATUS_PROCESSING = "processing"
 TASK_STATUS_COMPLETED = "completed"
 TASK_STATUS_FAILED = "failed"
 
-# 节点名 -> 中文名映射（用于前端展示）
-# 说明：这里的 key 应与 LangGraph 的 add_node("xxx", ...) 中的节点名一致。
+# Graph node identifiers mapped to UI labels.
 _NODE_NAME_TO_CN: Dict[str, str] = {
     "upload_file": "开始上传文件",
     "node_entry": "检查文件",
@@ -20,7 +21,7 @@ _NODE_NAME_TO_CN: Dict[str, str] = {
     "node_import_milvus": "导入向量库",
     "__end__": "处理完成",
     "END": "处理完成",
-    # --- Query 流程节点（kb/query_process/main_graph.py）---
+    # Query graph nodes
     "node_query_intent": "识别查询意图",
     "node_direct_answer": "直接回复",
     "node_item_name_confirm": "确认问题产品",
@@ -38,18 +39,12 @@ _NODE_NAME_TO_CN: Dict[str, str] = {
 
 
 def _to_cn(node_name: str) -> str:
-    """将节点名转换为中文展示名；若无映射则返回原名。"""
+    """Return the UI label for a node, falling back to its identifier."""
     return _NODE_NAME_TO_CN.get(node_name, node_name)
 
 
 def add_running_task(task_id: str, node_name: str, is_stream: bool = False) -> None:
-    """
-    添加“正在运行”的节点任务。
-
-    参数：
-    - task_id: 任务ID
-    - node_name: 节点名称(节点ID)
-    """
+    """Mark a task stage as active and optionally publish progress."""
     get_task_store().add_running(task_id, node_name)
 
     if is_stream:
@@ -57,15 +52,7 @@ def add_running_task(task_id: str, node_name: str, is_stream: bool = False) -> N
 
 
 def add_done_task(task_id: str, node_name: str, is_stream: bool = False) -> None:
-    """
-    添加“已完成”的节点任务。
-
-    注意：添加已完成任务时，会把同名的“正在运行”任务删除。
-
-    参数：
-    - task_id: 任务ID
-    - node_name: 节点名称(节点ID)
-    """
+    """Mark a task stage as complete and optionally publish progress."""
     get_task_store().add_done(task_id, node_name)
 
     if is_stream:
@@ -73,59 +60,34 @@ def add_done_task(task_id: str, node_name: str, is_stream: bool = False) -> None
 
 
 def set_task_result(task_id: str, key: str, value: str) -> None:
-    """
-    存储任务结果字段（如 answer / error）。
-    """
+    """Store a result field for a task."""
     get_task_store().set_result(task_id, key, value)
 
 
 def get_task_result(task_id: str, key: str, default: str = "") -> str:
-    """
-    获取任务结果字段（如 answer / error）。
-    """
+    """Return a result field for a task."""
     return get_task_store().get_result(task_id, key, default)
 
 
 def get_task_status(task_id: str) -> str:
-    """
-    获取当前任务状态。
-
-    参数：
-    - task_id: 任务ID
-
-    返回：
-    - str: 状态名称；如果未设置过则返回空字符串
-    """
+    """Return the current status for a task."""
     return get_task_store().get_status(task_id)
 
 
 def get_done_task_list(task_id: str) -> List[str]:
-    """
-    获取已完成节点列表（中文展示）。
-
-
-    """
+    """Return completed task stages using UI labels."""
     done = get_task_store().get_done(task_id)
     return [_to_cn(n) for n in done]
 
 
 def get_running_task_list(task_id: str) -> List[str]:
-    """
-    获取正在运行节点列表（中文展示）。
-
-    """
+    """Return active task stages using UI labels."""
     running = get_task_store().get_running(task_id)
     return [_to_cn(n) for n in running]
 
 
 def update_task_status(task_id: str, status_name: str, push_queue: bool = False) -> None:
-    """
-    更新任务状态。
-
-    参数：
-    - task_id: 任务ID
-    - status_name: 状态名称（字符串）
-    """
+    """Update task status and optionally publish a progress event."""
     get_task_store().update_status(task_id, status_name)
     if push_queue:
         task_push_queue(task_id)
@@ -139,6 +101,6 @@ def task_push_queue(task_id: str):
     })
 
 
-#
 def clear_task(task_id: str):
+    """Remove all stored state for a task."""
     get_task_store().clear(task_id)

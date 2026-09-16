@@ -1,23 +1,4 @@
-"""
-Run State 运行元数据管理工具
-============================
-记录每次 LangGraph 图执行的元数据，支持监控、调试和 checkpoint 恢复。
-
-存储方式：内存字典（轻量级，不依赖外部服务）
-可选：同步写入 MongoDB run_state 集合（若可用）
-
-记录字段：
-- run_id: 运行唯一标识
-- session_id: 会话标识
-- thread_id: LangGraph thread_id
-- graph_name: 图名称（query_app / import_app）
-- current_node: 最后执行的节点名
-- status: running / completed / failed / checkpointed
-- checkpoint_backend: checkpoint 后端类型
-- last_checkpoint_at: 最后一次 checkpoint 时间戳
-- resume_from_checkpoint: 是否从 checkpoint 恢复
-- error: 异常信息
-"""
+"""Run metadata used for query observability and checkpoint correlation."""
 
 import time
 import uuid
@@ -25,15 +6,15 @@ from typing import Dict, Any, Optional
 
 from app.core.logger import logger
 
-# 内存存储
+# In-memory state is always available for the active process.
 _run_states: Dict[str, Dict[str, Any]] = {}
 
-# 可选：尝试使用 MongoDB
+# MongoDB persistence is optional.
 _mongo_available: Optional[bool] = None
 
 
 def _try_get_mongo_collection():
-    """尝试获取 MongoDB run_state 集合，不可用时返回 None。"""
+    """Return the optional MongoDB collection when it is available."""
     global _mongo_available
     if _mongo_available is False:
         return None
@@ -54,15 +35,7 @@ def create_run(
     checkpoint_backend: str = "sqlite",
     resume_from_checkpoint: bool = False,
 ) -> str:
-    """
-    创建新的运行记录。
-
-    :param session_id: 会话标识
-    :param graph_name: 图名称
-    :param checkpoint_backend: Checkpoint 后端类型
-    :param resume_from_checkpoint: 是否从 checkpoint 恢复
-    :return: run_id
-    """
+    """Create a run record and return its identifier."""
     run_id = str(uuid.uuid4())[:12]
     now = time.time()
 
@@ -81,33 +54,25 @@ def create_run(
         "completed_at": None,
     }
 
-    # 内存存储
     _run_states[run_id] = doc
 
-    # 可选：MongoDB 存储
     collection = _try_get_mongo_collection()
     if collection is not None:
         try:
             collection.insert_one(doc)
         except Exception as e:
-            logger.debug(f"run_state MongoDB 写入失败（不影响主流程）: {e}")
+            logger.debug(f"Run metadata persistence failed: {e}")
 
-    logger.info(f"Run [{run_id}] 已创建: session={session_id}, graph={graph_name}")
+    logger.info(f"Run created: run_id={run_id}, session={session_id}, graph={graph_name}")
     return run_id
 
 
 def update_run_node(run_id: str, node_name: str) -> None:
-    """
-    更新当前运行节点。
-
-    :param run_id: 运行 ID
-    :param node_name: 当前节点名
-    """
+    """Record the latest graph node for a run."""
     if run_id in _run_states:
         _run_states[run_id]["current_node"] = node_name
         _run_states[run_id]["updated_at"] = time.time()
 
-    # 可选：更新 MongoDB
     collection = _try_get_mongo_collection()
     if collection is not None:
         try:
@@ -120,11 +85,7 @@ def update_run_node(run_id: str, node_name: str) -> None:
 
 
 def checkpoint_run(run_id: str) -> None:
-    """
-    记录 checkpoint 时间戳。
-
-    :param run_id: 运行 ID
-    """
+    """Record the most recent checkpoint timestamp for a run."""
     now = time.time()
     if run_id in _run_states:
         _run_states[run_id]["last_checkpoint_at"] = now
@@ -142,13 +103,7 @@ def checkpoint_run(run_id: str) -> None:
 
 
 def complete_run(run_id: str, status: str = "completed", error: str = "") -> None:
-    """
-    标记运行完成或失败。
-
-    :param run_id: 运行 ID
-    :param status: completed / failed
-    :param error: 错误信息（失败时）
-    """
+    """Mark a run as completed or failed and persist its terminal metadata."""
     now = time.time()
     if run_id in _run_states:
         _run_states[run_id]["status"] = status
@@ -166,27 +121,16 @@ def complete_run(run_id: str, status: str = "completed", error: str = "") -> Non
         except Exception:
             pass
 
-    logger.info(f"Run [{run_id}] {status}" + (f" error={error}" if error else ""))
+    logger.info(f"Run finished: run_id={run_id}, status={status}" + (f", error={error}" if error else ""))
 
 
 def get_run(run_id: str) -> Optional[Dict[str, Any]]:
-    """
-    获取运行记录。
-
-    :param run_id: 运行 ID
-    :return: 运行记录字典；未找到返回 None
-    """
+    """Return a run record from the local metadata store."""
     return _run_states.get(run_id)
 
 
 def get_session_runs(session_id: str, limit: int = 10) -> list:
-    """
-    获取指定会话最近的运行记录。
-
-    :param session_id: 会话标识
-    :param limit: 返回数量上限
-    :return: 运行记录列表
-    """
+    """Return the most recent run records for a session."""
     results = [
         r for r in _run_states.values()
         if r.get("session_id") == session_id

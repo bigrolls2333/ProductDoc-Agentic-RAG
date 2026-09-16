@@ -1,3 +1,5 @@
+"""Local cross-encoder reranking utilities."""
+
 from pathlib import Path
 
 import torch
@@ -9,6 +11,8 @@ _reranker_model = None
 
 
 class TransformersReranker:
+    """Score query-document pairs with a Transformers sequence classifier."""
+
     def __init__(self, model_name_or_path: str, device: str = "cpu", use_fp16: bool = False):
         self.device = device or "cpu"
         dtype = torch.float16 if use_fp16 and self.device.startswith("cuda") else torch.float32
@@ -21,6 +25,7 @@ class TransformersReranker:
         self.model.eval()
 
     def compute_score(self, sentence_pairs, batch_size: int = 8, max_length: int = 512):
+        """Return model scores for sentence pairs in bounded batches."""
         scores = []
         with torch.no_grad():
             for start in range(0, len(sentence_pairs), batch_size):
@@ -39,6 +44,7 @@ class TransformersReranker:
 
 
 def _resolve_reranker_path(raw_path: str) -> str:
+    """Resolve a local model path, including a cached Hugging Face snapshot."""
     if raw_path and Path(raw_path).exists():
         return raw_path
 
@@ -54,7 +60,8 @@ def _resolve_reranker_path(raw_path: str) -> str:
     return raw_path
 
 def get_reranker_model():
-    global _reranker_model  
+    """Return the process-local reranker instance."""
+    global _reranker_model
     if _reranker_model is None:
         _reranker_model = TransformersReranker(
             model_name_or_path=_resolve_reranker_path(reranker_config.bge_reranker_large),

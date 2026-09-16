@@ -1,3 +1,5 @@
+"""Evaluate retrieval sufficiency and enforce a bounded web-retry policy."""
+
 import sys
 import json
 import re
@@ -12,7 +14,7 @@ from app.utils.task_utils import add_done_task, add_running_task
 from app.utils.eval_flag_utils import is_eval_enabled
 
 
-# 评估给 LLM 的文档预览条数与单条文本长度
+# Bound the evidence payload sent to the evaluator.
 EVAL_TOP_K_PREVIEW = 3
 EVAL_TEXT_PREVIEW_CHARS = 300
 
@@ -82,17 +84,13 @@ def _has_model_specific_evidence(item_names: list, docs: list) -> bool:
 
 
 def _llm_eval_retrieval(state: QueryGraphState) -> Dict:
-    """
-    让 LLM 评估本轮召回的 reranked_docs 是否充分支撑回答用户问题，
-    决定本轮是直接回答、补搜一次 Web，还是无答案澄清。
-    """
+    """Ask the evaluator whether the current evidence supports an answer."""
     query = (state.get("rewritten_query") or state.get("original_query") or "").strip()
     item_names = state.get("item_names") or []
     retrieval_plan = state.get("retrieval_plan") or {}
     reranked_docs = state.get("reranked_docs") or []
     retry_count = state.get("self_eval_retry_count", 0)
 
-    # 没有任何召回结果：直接走澄清，不必调 LLM
     if not reranked_docs:
         return {
             "eval_status": "needs_clarification",
@@ -152,7 +150,6 @@ def _llm_eval_retrieval(state: QueryGraphState) -> Dict:
     if status not in {"sufficient", "insufficient_retry", "needs_clarification"}:
         status = "needs_clarification"
 
-    # 已经用完重试机会，强制作澄清，避免无限重搜
     if status == "insufficient_retry" and retry_count >= 1:
         status = "needs_clarification"
         result["reason"] = (result.get("reason") or "") + " | max_retry_reached"
@@ -182,11 +179,7 @@ def _llm_eval_retrieval(state: QueryGraphState) -> Dict:
 
 
 def _fallback_eval(state: QueryGraphState) -> Dict:
-    """
-    LLM 自评失败时的降级策略：
-    - 有 reranked_docs 就算 sufficient，让主链路继续生成答案（基于 rerank 分数的最小判断）
-    - 没有就走 needs_clarification
-    """
+    """Return a conservative local decision when the evaluator is unavailable."""
     reranked_docs = state.get("reranked_docs") or []
     if reranked_docs:
         return {
@@ -210,16 +203,12 @@ CLARIFICATION_FALLBACK_ANSWER = (
 
 
 def node_self_eval(state: QueryGraphState) -> QueryGraphState:
-    """
-    Rerank 后的结果自评节点：LLM 判断召回是否充分，
-    返回 sufficient / insufficient_retry / needs_clarification，
-    供 main_graph 的条件路由决定是直接回答、补搜 Web 还是澄清。
-    """
+    """Evaluate reranked evidence and record the next workflow action."""
     node_name = sys._getframe().f_code.co_name
     session_id = state["session_id"]
     is_stream = state.get("is_stream", False)
 
-    logger.info(">>> node_self_eval: 开始评估召回充分性")
+    logger.info("node_self_eval started")
     add_running_task(session_id, node_name, is_stream)
 
     try:
@@ -229,7 +218,7 @@ def node_self_eval(state: QueryGraphState) -> QueryGraphState:
         else:
             detail = _llm_eval_retrieval(state)
     except Exception as e:
-        logger.error(f"LLM 结果自评失败，降级为兜底策略: {e}", exc_info=True)
+        logger.error(f"Retrieval evaluation failed; using local fallback: {e}", exc_info=True)
         detail = _fallback_eval(state)
 
     if detail["eval_status"] == "insufficient_retry" and is_eval_enabled("EVAL_DISABLE_SELF_EVAL_RETRY"):
@@ -240,8 +229,6 @@ def node_self_eval(state: QueryGraphState) -> QueryGraphState:
     state["self_eval_detail"] = detail
     state["self_eval_status"] = detail["eval_status"]
 
-    # 澄清兜底：把拒答写入 answer，让下游 answer_output 走“已有答案”分支，
-    # 避免在召回不充分时仍基于噪声文档生成幻觉答案
     if detail["eval_status"] == "needs_clarification":
         state["answer"] = CLARIFICATION_FALLBACK_ANSWER
         state["direct_answer"] = CLARIFICATION_FALLBACK_ANSWER

@@ -1,10 +1,4 @@
-"""
-Agentic RAG 改造验证脚本：跑真实 query_app，打印 retrieval_plan / self_eval / retry 三类场景的关键中间状态。
-
-用法：
-    .venv/Scripts/python.exe scripts/verify_agentic.py
-    .venv/Scripts/python.exe scripts/verify_agentic.py --query "H3C LA2608 怎么接入4G网络"
-"""
+"""Exercise representative query-routing and retrieval scenarios."""
 import argparse
 import sys
 import time
@@ -71,7 +65,7 @@ def run_one(query: str, is_stream: bool = False) -> dict:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--query", default="", help="单条自定义查询；不传则跑 3 个预设场景")
+    ap.add_argument("--query", default="", help="Run one custom query instead of the default scenarios.")
     args = ap.parse_args()
 
     if args.query:
@@ -79,10 +73,10 @@ def main():
         return
 
     scenarios = [
-        ("场景1-本地精确产品问题", "H3C LA2608 如何接入 3G/4G 网络？"),
-        ("场景2-本地大概率没有的时效性查询(应触发web补搜)",
+        ("local product query", "H3C LA2608 如何接入 3G/4G 网络？"),
+        ("time-sensitive query with web retry",
          "H3C LA2608 2026年最新固件版本号是多少"),
-        ("场景3-完全不相关澄清类",
+        ("out-of-scope query",
          "今天天气怎么样"),
     ]
     for title, q in scenarios:

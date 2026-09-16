@@ -1,3 +1,5 @@
+"""Resolve product references before document retrieval."""
+
 import sys
 import os
 import json
@@ -56,7 +58,7 @@ def _structured_confirmed_items(names: List[str]) -> List[Dict[str, Any]]:
 
 
 def _sanitize_for_checkpoint(value):
-    """将 Mongo 等外部对象转成 checkpoint 可序列化的数据。"""
+    """Convert external identifiers into checkpoint-serializable values."""
     if isinstance(value, list):
         return [_sanitize_for_checkpoint(item) for item in value]
     if isinstance(value, dict):
@@ -131,38 +133,28 @@ def _classify_history_item_reference(query: str, history: List[Dict]) -> Dict[st
                 "reason": result.get("reason", "llm_reuse_history_items"),
             }
     except Exception as e:
-        logger.error(f"历史商品指代判断失败，默认不复用历史商品: {e}", exc_info=True)
+        logger.error(f"Historical product resolution failed; ignoring prior product context: {e}", exc_info=True)
 
     return {"reuse_history_items": False, "item_names": [], "reason": "do_not_reuse_history_items"}
 
 
 def step_3_extract_info(query: str, history: List[Dict]) -> Dict:
-    """
-    利用LLM从当前问题以及历史会话中提取出主要询问的商品名称item_names（可多个，JSON列表形式）
-    若商品名不够明确则返回空列表，同时根据上下文重新改写问题，保证问题独立完整
-    :param query: 字符串 - 用户当前原始查询问题（如："这个多少钱？"）
-    :param history: 列表[字典] - 近期会话历史
-    :return: 字典 - 提取结果，格式：{"item_names": [], "rewritten_query": ""}
-    """
-    logger.info("Step 3: 开始提取信息 (LLM)")
-    
-    # 1. 初始化准备
+    """Extract product names and produce a standalone rewritten query."""
+    logger.info("Product resolution: extracting query context")
+
     client = get_llm_client(json_mode=True)
-    
-    # 构造历史对话文本
+
     history_text = ""
     for msg in history:
         history_text += f"{msg.get('role', 'unknown')}: {msg.get('text', '')}\n"
     
-    logger.info(f"Step 3: 历史上下文构建完成，长度: {len(history_text)} 字符")
+    logger.debug(f"Product resolution: history context length={len(history_text)}")
 
-    # 2. 加载提示词
     try:
-        # 使用关键字参数传递，避免参数位置错误
         prompt = load_prompt("rewritten_query_and_itemnames", history_text=history_text, query=query)
-        logger.debug(f"Step 3: 提示词加载成功，Prompt长度: {len(prompt)}")
+        logger.debug(f"Product resolution: prompt loaded, length={len(prompt)}")
     except Exception as e:
-        logger.error(f"Step 3: 加载提示词失败: {e}")
+        logger.error(f"Product resolution: prompt loading failed: {e}")
         return {"item_names": [], "rewritten_query": query}
 
     messages = [
@@ -171,18 +163,15 @@ def step_3_extract_info(query: str, history: List[Dict]) -> Dict:
     ]
 
     try:
-        logger.info("Step 3: 正在调用 LLM 进行提取...")
+        logger.debug("Product resolution: invoking extraction model")
         response = client.invoke(messages)
         content = response.content
-        logger.debug(f"Step 3: LLM 原始响应: {content}")
 
-        # 清理 Markdown 代码块
         if content.startswith("```json"):
             content = content.replace("```json", "").replace("```", "")
         
         result = json.loads(content)
         
-        # 健壮性检查
         if "item_names" not in result:
             result["item_names"] = []
         if "rewritten_query" not in result:
@@ -193,55 +182,50 @@ def step_3_extract_info(query: str, history: List[Dict]) -> Dict:
             if (normalized := _normalize_name_key(item))
         ]))
             
-        logger.info(f"Step 3: 提取结果解析成功 - 商品名: {result['item_names']}, 重写问题: {result['rewritten_query']}")
+        logger.info(f"Product resolution: extracted_items={result['item_names']}")
         return result
 
     except Exception as e:
-        logger.error(f"Step 3: LLM 提取或解析失败: {e}")
+        logger.error(f"Product resolution: extraction failed: {e}")
         return {"item_names": [], "rewritten_query": query}
 
 
 def step_4_vectorize_and_query(item_names: List[str]) -> List[Dict]:
-    """
-    对提取的 item_names 进行向量化并在 Milvus 中进行混合搜索
-    """
+    """Search the product-name collection using hybrid embeddings."""
     normalized_item_names = list(dict.fromkeys([
         normalized
         for item in item_names
         if (normalized := _normalize_name_key(item))
     ]))
-    logger.info(f"Step 4: 开始向量化检索，目标商品: {normalized_item_names}")
+    logger.info(f"Product resolution: searching items={normalized_item_names}")
     results = []
     
     client = get_milvus_client()
     if not client:
-        logger.error("Step 4: 无法连接到 Milvus")
+        logger.error("Product resolution: Milvus client unavailable")
         return results
 
     collection_name = os.environ.get("ITEM_NAME_COLLECTION")
     if not collection_name:
-        logger.error("Step 4: 环境变量中未找到 ITEM_NAME_COLLECTION")
+        logger.error("Product resolution: ITEM_NAME_COLLECTION is not configured")
         return results
 
     try:
-        logger.info("Step 4: 正在生成 Embedding (Dense + Sparse)...")
+        logger.debug("Product resolution: generating embeddings")
         embeddings = generate_embeddings(normalized_item_names)
-        logger.info(f"Step 4: 向量生成完成，开始 Milvus 搜索 (Collection: {collection_name})")
+        logger.debug(f"Product resolution: searching collection={collection_name}")
 
         for i, name in enumerate(normalized_item_names):
             try:
                 dense_vector = embeddings.get("dense")[i]
                 sparse_vector = embeddings.get("sparse")[i]
 
-                # 构造混合搜索请求
                 reqs = create_hybrid_search_requests(
                     dense_vector=dense_vector,
                     sparse_vector=sparse_vector,
                     limit=5
                 )
 
-                # 执行混合搜索
-                # 权重调整为 0.8 (Dense) / 0.2 (Sparse) 以优化评分
                 search_res = hybrid_search(
                     client=client,
                     collection_name=collection_name,
@@ -263,7 +247,7 @@ def step_4_vectorize_and_query(item_names: List[str]) -> List[Dict]:
                         if alias_name:
                             matches.append({
                                 "alias_name": alias_name,
-                                "item_name": alias_name,  # 兼容后续日志和旧逻辑
+                                "item_name": alias_name,  # Preserve the field for downstream compatibility.
                                 "canonical_name": canonical_name,
                                 "brand": entity.get("brand", ""),
                                 "category": entity.get("category", ""),
@@ -271,29 +255,27 @@ def step_4_vectorize_and_query(item_names: List[str]) -> List[Dict]:
                                 "alias_type": entity.get("alias_type", ""),
                                 "score": score
                             })
-                            logger.debug(f"Step 4: '{name}' 匹配别名: {alias_name} => {canonical_name} (Score: {score:.4f})")
+                            logger.debug(f"Product resolution match: {alias_name} -> {canonical_name}, score={score:.4f}")
 
                 results.append({
                     "extracted_name": name,
                     "matches": matches
                 })
-                logger.info(f"Step 4: 商品 '{name}' 检索完成，找到 {len(matches)} 个匹配项")
+                logger.info(f"Product resolution: item={name}, matches={len(matches)}")
 
             except Exception as inner_e:
-                logger.error(f"Step 4: 处理商品 '{name}' 时出错: {inner_e}")
+                logger.error(f"Product resolution failed for item={name}: {inner_e}")
                 results.append({"extracted_name": name, "matches": []})
 
     except Exception as e:
-        logger.error(f"Step 4: 向量化或搜索过程发生全局错误: {e}")
+        logger.error(f"Product resolution search failed: {e}")
 
     return results
 
 
 def step_5_align_item_names(query_results: List[Dict]) -> Dict:
-    """
-    根据 Milvus 搜索评分，对齐商品名，生成「确认商品名」和「候选商品名」
-    """
-    logger.info("Step 5: 开始对齐商品名 (Score Analysis)")
+    """Convert product-name matches into confirmed names or clarification options."""
+    logger.info("Product resolution: aligning candidates")
     
     confirmed_item_names = []
     options = []
@@ -303,22 +285,19 @@ def step_5_align_item_names(query_results: List[Dict]) -> Dict:
         matches = res.get("matches", []) or []
         
         if not matches:
-            logger.info(f"Step 5: '{extracted_name}' 无匹配结果")
+            logger.info(f"Product resolution: no matches for item={extracted_name}")
             continue
 
-        # 按分数降序
         matches.sort(key=lambda x: x.get("score", 0), reverse=True)
-        
-        # 打印详细评分日志辅助调试
+
         top_matches_log = ", ".join(
             [
                 f"{m.get('alias_name') or m.get('item_name')}=>{m.get('canonical_name') or m.get('alias_name') or m.get('item_name')}({m['score']:.3f})"
                 for m in matches[:3]
             ]
         )
-        logger.info(f"Step 5: '{extracted_name}' Top匹配: {top_matches_log}")
+        logger.debug(f"Product resolution: top matches for {extracted_name}: {top_matches_log}")
 
-        # 筛选
         high = [m for m in matches if m.get("score", 0) > 0.85]
         mid = [m for m in matches if m.get("score", 0) >= 0.6]
         high_canonical_names = list(dict.fromkeys([
@@ -328,17 +307,14 @@ def step_5_align_item_names(query_results: List[Dict]) -> Dict:
             m.get("canonical_name") or m.get("alias_name") or m.get("item_name") for m in mid
         ]))
 
-        # 规则 A: 单个高置信度
         if len(high_canonical_names) == 1:
             confirmed_name = high_canonical_names[0]
             confirmed_item_names.append(confirmed_name)
-            logger.info(f"Step 5: 规则A命中 (Single High) -> 确认: {confirmed_name}")
+            logger.info(f"Product resolution: confirmed high-confidence match={confirmed_name}")
             continue
 
-        # 规则 B: 多个高置信度
         if len(high) > 1:
             picked = None
-            # 优先匹配同名
             if extracted_name:
                 for m in high:
                     if (
@@ -347,58 +323,50 @@ def step_5_align_item_names(query_results: List[Dict]) -> Dict:
                         or _normalize_name_key(m.get("canonical_name")) == extracted_name
                     ):
                         picked = m
-                        logger.info(f"Step 5: 规则B命中 (Exact Match in High) -> 确认: {picked.get('canonical_name')}")
+                        logger.info(f"Product resolution: exact high-confidence match={picked.get('canonical_name')}")
                         break
             
-            # 否则取最高分
             if not picked:
                 picked = high[0]
-                logger.info(f"Step 5: 规则B命中 (Highest Score) -> 确认: {picked.get('canonical_name')}")
+                logger.info(f"Product resolution: selected highest-scoring match={picked.get('canonical_name')}")
 
             confirmed_item_names.append(picked.get("canonical_name") or picked.get("alias_name") or picked.get("item_name"))
             continue
 
-        # 规则 C: 无高置信度，取中置信度候选
         if len(mid) > 0:
             current_options = mid_canonical_names[:5]
             options.extend(current_options)
-            logger.info(f"Step 5: 规则C命中 (Mid Confidence) -> 添加候选: {current_options}")
+            logger.info(f"Product resolution: clarification candidates={current_options}")
             continue
         
-        logger.info(f"Step 5: 规则D命中 (Low Confidence) -> 无匹配")
+        logger.info(f"Product resolution: no match above threshold for item={extracted_name}")
 
     result = {
         "confirmed_item_names": list(set(confirmed_item_names)),
         "options": list(set(options))
     }
-    logger.info(f"Step 5: 对齐结果: {result}")
+    logger.info(f"Product resolution alignment completed: {result}")
     return result
 
 
 def step_6_check_confirmation(state: Dict, align_result: Dict, session_id: str, history: List[Dict], rewritten_query: str) -> Dict:
-    """
-    检查对齐结果，更新 State
-    """
-    logger.info("Step 6: 检查确认状态并更新 State")
-    
-    # 健壮性处理
+    """Apply confirmed product names or create a pending clarification."""
+    logger.info("Product resolution: applying confirmation result")
+
     if align_result is None:
         align_result = {}
 
     confirmed = align_result.get("confirmed_item_names", [])
     options = align_result.get("options", [])
 
-    # 分支 A: 有确认商品名
     if confirmed:
-        logger.info(f"Step 6: [分支A] 存在确认商品名: {confirmed}")
+        logger.info(f"Product resolution: confirmed_items={confirmed}")
 
-        # 【新】清除 pending_clarification，更新已确认商品到 session_memory
         upsert_session_memory(session_id, {
             "pending_clarification": None,
             "last_confirmed_items": _structured_confirmed_items(confirmed),
         })
 
-        # 更新历史消息中的 item_names
         ids_to_update = []
         for msg in history:
             if not msg.get("item_names"):
@@ -407,7 +375,7 @@ def step_6_check_confirmation(state: Dict, align_result: Dict, session_id: str, 
                     ids_to_update.append(str(mid))
 
         if ids_to_update:
-            logger.info(f"Step 6: 更新 {len(ids_to_update)} 条历史消息的关联商品名")
+            logger.info(f"Product resolution: updated history records={len(ids_to_update)}")
             update_message_item_names(ids_to_update, confirmed)
 
         state["item_names"] = confirmed
@@ -416,11 +384,9 @@ def step_6_check_confirmation(state: Dict, align_result: Dict, session_id: str, 
             del state["answer"]
         return state
 
-    # 分支 B: 有候选商品名
     if options:
-        logger.info(f"Step 6: [分支B] 存在候选商品名: {options}")
+        logger.info(f"Product resolution: creating clarification candidates={options}")
 
-        # 【新】写入 pending_clarification 到 session_memory
         upsert_session_memory(session_id, {
             "pending_clarification": {
                 "original_query": state.get("original_query", ""),
@@ -436,22 +402,18 @@ def step_6_check_confirmation(state: Dict, align_result: Dict, session_id: str, 
         state["pending_clarification_created"] = True
         return state
 
-    # 分支 C: 无结果
-    logger.info("Step 6: [分支C] 无确认也无候选")
+    logger.info("Product resolution: no confirmed product or candidate")
     state["answer"] = "抱歉，未找到相关产品，请提供准确型号以便我为您查询。"
     state["item_names"] = []
     return state
 
 
 def step_7_write_history(state: Dict, session_id: str, history: List[Dict], rewritten_query: str, message_id: str) -> Dict:
-    """
-    写入最终历史记录
-    """
-    logger.info("Step 7: 写入会话历史")
-    
-    # 如果有助手回答（分支 B/C），写入助手消息
+    """Persist the final assistant response and enriched user message."""
+    logger.info("Product resolution: persisting conversation history")
+
     if state.get("answer"):
-        logger.info("Step 7: 保存助手回答")
+        logger.debug("Product resolution: persisting assistant response")
         save_chat_message(
             session_id=session_id,
             role="assistant",
@@ -460,8 +422,7 @@ def step_7_write_history(state: Dict, session_id: str, history: List[Dict], rewr
             item_names=[]
         )
 
-    # 更新用户消息（关联 rewrite_query 和 item_names）
-    logger.info(f"Step 7: 更新用户消息 (ID: {message_id})")
+    logger.debug(f"Product resolution: updating user message id={message_id}")
     save_chat_message(
         session_id=session_id,
         role="user",
@@ -475,26 +436,17 @@ def step_7_write_history(state: Dict, session_id: str, history: List[Dict], rewr
 
 
 def node_item_name_confirm(state: QueryGraphState) -> QueryGraphState:
-    """
-    主节点函数：商品名称确认流程
-
-    改造后新增：
-    - 消费 context_bundle.confirmed_items 加速商品确认
-    - 处理 clarification_resolved（从 pending_clarification 恢复）
-    - 写回 session_memory（confirmed_items / pending_clarification）
-    """
-    logger.info(">>> node_item_name_confirm: 开始处理")
+    """Resolve product names from the current query and session context."""
+    logger.info("node_item_name_confirm started")
 
     session_id = state["session_id"]
     original_query = state.get("original_query", "")
     is_stream = state.get("is_stream", False)
 
-    # 标记任务开始
     add_running_task(session_id, "node_item_name_confirm", is_stream)
 
-    # 【新】clarification_resolved: 用户在 build_context 中已选择候选，跳过向量检索
     if state.get("clarification_resolved"):
-        logger.info(f"Node: clarification_resolved=True, 已从 pending_clarification 恢复商品名: {state.get('item_names')}")
+        logger.info(f"Product resolution: restored_items={state.get('item_names')}")
         clear_pending_clarification(session_id)
         upsert_session_memory(session_id, {
             "last_confirmed_items": _structured_confirmed_items(state.get("item_names") or []),
@@ -508,11 +460,10 @@ def node_item_name_confirm(state: QueryGraphState) -> QueryGraphState:
             item_names=state.get("item_names", []),
         )
         state["clarification_resolved"] = False
-        # 不需要继续向量检索，直接进入后续流程
         add_done_task(session_id, "node_item_name_confirm", is_stream)
         return state
 
-    # 【新】优先从 context_bundle 读取已确认商品，加速确认
+    # Reuse session-level product context before invoking the resolver.
     context_bundle = state.get("context_bundle") or {}
     confirmed_from_memory = context_bundle.get("confirmed_items") or []
     memory_item_names = [
@@ -520,17 +471,14 @@ def node_item_name_confirm(state: QueryGraphState) -> QueryGraphState:
         if (name := _memory_item_name(item))
     ]
     if confirmed_from_memory:
-        logger.info(f"Node: 从 context_bundle 读取到已确认商品: {memory_item_names}")
+        logger.info(f"Product resolution: context items={memory_item_names}")
 
-    # 1. 获取历史记录
     history = _sanitize_for_checkpoint(get_recent_messages(session_id, limit=10))
-    logger.info(f"Node: 获取到 {len(history)} 条历史消息")
+    logger.debug(f"Product resolution: history_messages={len(history)}")
 
-    # 2. 保存用户当前消息 (初始保存，后续 step 7 会更新)
     message_id = save_chat_message(session_id, "user", original_query, "", state.get("item_names", []))
-    logger.debug(f"Node: 用户消息已初始保存, ID: {message_id}")
+    logger.debug(f"Product resolution: initial user message id={message_id}")
 
-    # 3. 提取信息
     extract_res = step_3_extract_info(original_query, history)
     item_names = extract_res.get("item_names", [])
     rewritten_query = extract_res.get("rewritten_query", original_query)
@@ -539,72 +487,37 @@ def node_item_name_confirm(state: QueryGraphState) -> QueryGraphState:
         if memory_item_names:
             item_names = memory_item_names[:1]
             used_memory_items = True
-            logger.info(f"Node: 当前轮未抽出商品名，直接复用 session_memory 商品: {item_names}")
+            logger.info(f"Product resolution: reusing session product={item_names}")
         else:
             reference_result = _classify_history_item_reference(original_query, history)
             if reference_result.get("reuse_history_items"):
                 item_names = reference_result.get("item_names", [])
                 logger.info(
-                    f"Node: LLM确认沿用历史商品上下文: {item_names}, "
+                    f"Product resolution: reusing history product={item_names}, "
                     f"reason={reference_result.get('reason')}"
                 )
             else:
-                logger.info(f"Node: 当前轮未抽出商品名，且不复用历史商品: {reference_result.get('reason')}")
-    
-    # 更新 State 中的 rewrite_query
+                logger.info(f"Product resolution: history product not reused, reason={reference_result.get('reason')}")
+
     state["rewritten_query"] = rewritten_query
 
     align_result = {}
 
-    # 4. & 5. 如果有提取到商品名，进行搜索和对齐
     if used_memory_items:
         align_result = {"confirmed_item_names": item_names, "options": []}
     elif len(item_names) > 0:
         query_results = step_4_vectorize_and_query(item_names)
         align_result = step_5_align_item_names(query_results)
     else:
-        logger.info("Node: 未提取到商品名，跳过向量检索")
+        logger.info("Product resolution: no product name extracted; skipping vector search")
 
-    # 6. 检查确认状态
     state = step_6_check_confirmation(state, align_result, session_id, history, rewritten_query)
 
-    # 7. 写入最终历史
     final_state = step_7_write_history(state, session_id, history, rewritten_query, message_id)
 
-    # 将 history 存入 state，供后续节点（如 node_answer_output）使用
     final_state["history"] = history
 
-    # 标记任务完成
     add_done_task(session_id, "node_item_name_confirm", is_stream)
-    
-    logger.info(f"Node: 处理结束, Final State Item Names: {final_state.get('item_names')}")
+
+    logger.info(f"node_item_name_confirm completed: items={final_state.get('item_names')}")
     return final_state
-
-
-if __name__ == "__main__":
-    # 测试代码块
-    print("\n" + "="*50)
-    print(">>> 启动 node_item_name_confirm 本地测试")
-    print("="*50)
-    
-    # 模拟输入状态
-    mock_state = {
-        "session_id": "test_debug_session_001",
-        "original_query": "HAK 180 烫金机多少钱？",  # 针对用户提到的具体 case
-        "is_stream": False,
-        "item_names": []
-    }
-
-    try:
-        # 运行节点
-        result = node_item_name_confirm(mock_state)
-        
-        print("\n" + "="*50)
-        print(">>> 测试结果摘要:")
-        print(f"Rewritten Query: {result.get('rewritten_query')}")
-        print(f"Item Names: {result.get('item_names')}")
-        print(f"Answer: {result.get('answer')}")
-        print("="*50)
-
-    except Exception as e:
-        logger.exception(f"测试运行期间发生未捕获异常: {e}")

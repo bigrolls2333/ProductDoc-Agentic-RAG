@@ -1,18 +1,4 @@
-"""
-node_build_context — 上下文捆绑包构建节点
-==========================================
-改造后的图入口节点（原入口为 node_query_intent）。
-
-职责：
-1. 从 MongoDB 加载 session_memory 和最近对话历史
-2. 按预算限制组装 ContextBundle（消息数、证据数、字符截断）
-3. 检测澄清回复（"第一个"/"第二个"等序数词），解析 item_names
-4. 将组装好的 context_bundle 写入 state，供下游节点消费
-
-降级策略：
-- session_memory 不存在 → 所有字段为空，各节点按原有逻辑运行
-- MongoDB 不可用 → history 为空列表，不影响主流程
-"""
+"""Assemble bounded conversation, memory, and evidence context for a query run."""
 
 import re
 import sys
@@ -28,19 +14,14 @@ from app.utils.eval_flag_utils import is_eval_enabled
 from app.core.logger import logger
 
 
-# ========================
-# 预算常量
-# ========================
-MAX_HISTORY_MESSAGES = 6       # 最多携带 6 条历史消息
-MAX_EVIDENCE_DOCS = 6           # 最多携带 6 条证据文档
-MAX_CHARS_PER_MESSAGE = 500     # 每条消息截断 500 字
-MAX_CHARS_PER_DOC = 500         # 每条证据 text_preview 截断 500 字
-MAX_ANSWER_SUMMARY_CHARS = 500  # 答案摘要截断 500 字
+# Context budgets keep checkpoint and model payloads bounded.
+MAX_HISTORY_MESSAGES = 6       # Maximum conversation messages included in context.
+MAX_EVIDENCE_DOCS = 6          # Maximum evidence documents included in context.
+MAX_CHARS_PER_MESSAGE = 500    # Maximum characters per conversation message.
+MAX_CHARS_PER_DOC = 500        # Maximum characters per evidence preview.
+MAX_ANSWER_SUMMARY_CHARS = 500 # Maximum characters in the answer summary.
 
 
-# ========================
-# 澄清回复检测
-# ========================
 CLARIFICATION_RESOLUTION_PATTERNS = [
     r"^(第)?[一二三四五12345]个$",
     r"^(第)?[一二三四五12345]种$",
@@ -57,36 +38,25 @@ ORDINAL_MAP = {
 
 
 def _is_clarification_resolution(query: str) -> bool:
-    """检测用户输入是否为对澄清候选的选择回复。"""
+    """Return whether a query selects one of the pending candidates."""
     clean = (query or "").strip()
     return any(re.match(pattern, clean) for pattern in CLARIFICATION_RESOLUTION_PATTERNS)
 
 
 def _resolve_candidate_selection(query: str, candidates: list) -> str | None:
-    """
-    根据用户序数词从候选列表中解析选中的商品名。
-
-    :param query: 用户输入（如 "第二个"）
-    :param candidates: 候选列表 [{"name": "...", "score": 0.72}, ...]
-    :return: 选中的商品名；解析失败返回 None
-    """
+    """Resolve an ordinal selection against the pending candidate list."""
     clean = (query or "").strip().lower()
     for word, idx in ORDINAL_MAP.items():
         if word in clean:
             if idx < len(candidates):
                 return candidates[idx].get("name")
-    # "就是它"/"就这个" → 默认选第一个
     if clean in {"就是它", "就这个"} and candidates:
         return candidates[0].get("name")
     return None
 
 
-# ========================
-# 预算限制函数
-# ========================
-
 def _limit_messages(messages: list, max_count: int = MAX_HISTORY_MESSAGES) -> list:
-    """截取最近 N 条消息，每条消息 text 截断指定字符数。"""
+    """Keep the latest messages within the configured character budget."""
     result = []
     for msg in (messages or [])[-max_count:]:
         truncated = {
@@ -99,7 +69,7 @@ def _limit_messages(messages: list, max_count: int = MAX_HISTORY_MESSAGES) -> li
 
 
 def _sanitize_for_checkpoint(value):
-    """将 Mongo 等外部对象转成 checkpoint 可序列化的数据。"""
+    """Convert external identifiers into checkpoint-serializable values."""
     if isinstance(value, list):
         return [_sanitize_for_checkpoint(item) for item in value]
     if isinstance(value, dict):
@@ -110,7 +80,7 @@ def _sanitize_for_checkpoint(value):
 
 
 def _limit_evidence(docs: list, max_count: int = MAX_EVIDENCE_DOCS) -> list:
-    """截取最近 N 条证据文档，每条 text_preview 截断指定字符数。"""
+    """Keep a bounded summary of the most recent evidence documents."""
     result = []
     for doc in (docs or [])[:max_count]:
         d = {
@@ -125,7 +95,7 @@ def _limit_evidence(docs: list, max_count: int = MAX_EVIDENCE_DOCS) -> list:
 
 
 def _truncate(text: str, max_chars: int = MAX_ANSWER_SUMMARY_CHARS) -> str:
-    """截断字符串到指定字符数。"""
+    """Truncate text to the configured character limit."""
     return (text or "")[:max_chars]
 
 
@@ -174,9 +144,7 @@ def _normalize_confirmed_items(items: list) -> list:
 
 
 def _load_product_memory_hints(query: str, confirmed_items: list) -> dict:
-    """
-    读取商品长期记忆。优先按已确认商品精确读取，再用当前 query 做别名搜索兜底。
-    """
+    """Load product memory by confirmed item first, then fall back to alias search."""
     if is_eval_enabled("EVAL_DISABLE_PRODUCT_MEMORY"):
         return {
             "matched": False,
@@ -216,33 +184,17 @@ def _load_product_memory_hints(query: str, confirmed_items: list) -> dict:
     }
 
 
-# ========================
-# 主节点函数
-# ========================
-
 def node_build_context(state: QueryGraphState) -> QueryGraphState:
-    """
-    上下文捆绑包构建节点（图入口第一节点）。
-
-    组装 ContextBundle 写入 state["context_bundle"]：
-    - history_messages: 最近 6 条消息（每条截断 500 字）
-    - confirmed_items: 从 session_memory 读取的已确认商品
-    - recent_evidence_docs: 最近 6 条证据文档（每条截断 500 字）
-    - last_answer_summary: 上一轮答案摘要（截断 500 字）
-    - pending_clarification: 待处理澄清任务
-
-    同时检测澄清回复并设置 clarification_resolved 标志。
-    """
+    """Load session context, resolve pending clarification, and update state."""
     node_name = sys._getframe().f_code.co_name
     session_id = state.get("session_id", "")
     is_stream = state.get("is_stream", False)
 
-    logger.info(">>> node_build_context: 开始构建上下文捆绑包")
+    logger.info("node_build_context started")
     add_running_task(session_id, node_name, is_stream)
 
     query = (state.get("original_query") or "").strip()
 
-    # 1. 加载 session_memory
     if is_eval_enabled("EVAL_DISABLE_CONTEXT_BUNDLE"):
         state["history"] = []
         state["context_bundle"] = {
@@ -256,23 +208,21 @@ def node_build_context(state: QueryGraphState) -> QueryGraphState:
             "disabled_by_eval": True,
         }
         state["product_memory_hints"] = {}
-        logger.info("node_build_context: EVAL_DISABLE_CONTEXT_BUNDLE=1，跳过上下文与记忆加载")
+        logger.info("node_build_context skipped by EVAL_DISABLE_CONTEXT_BUNDLE")
         add_done_task(session_id, node_name, is_stream)
         return state
 
     mem = {} if is_eval_enabled("EVAL_DISABLE_SESSION_MEMORY") else (get_session_memory(session_id) or {})
     logger.info(
-        f"node_build_context: session_memory 命中="
+        f"node_build_context: session memory loaded, "
         f"confirmed_items={mem.get('last_confirmed_items')}, "
         f"has_pending_clarification={bool(mem.get('pending_clarification'))}"
     )
 
-    # 2. 加载最近对话历史
     history = _sanitize_for_checkpoint(get_recent_messages(session_id, limit=10))
     state["history"] = history
-    logger.info(f"node_build_context: 加载 {len(history)} 条历史消息")
+    logger.info(f"node_build_context: history_messages={len(history)}")
 
-    # 3. 组装 ContextBundle（带预算限制）
     confirmed_items = _normalize_confirmed_items(mem.get("last_confirmed_items") or [])
     bundle = {
         "history_messages": _limit_messages(history),
@@ -286,13 +236,12 @@ def node_build_context(state: QueryGraphState) -> QueryGraphState:
     state["context_bundle"] = bundle
     state["product_memory_hints"] = _load_product_memory_hints(query, confirmed_items)
 
-    # 4. 检测澄清回复
     pending = bundle.get("pending_clarification")
     if pending and _is_clarification_resolution(query):
         candidates = pending.get("candidates") or []
         resolved = _resolve_candidate_selection(query, candidates)
         if resolved:
-            logger.info(f"node_build_context: 澄清恢复 → 选中商品 '{resolved}'")
+            logger.info(f"node_build_context: clarification resolved, product={resolved}")
             restored_query = (
                 pending.get("original_query")
                 or pending.get("query")
@@ -306,14 +255,13 @@ def node_build_context(state: QueryGraphState) -> QueryGraphState:
             bundle["resolved_clarification_query"] = query
             bundle["restored_original_query"] = restored_query
         else:
-            logger.warning(f"node_build_context: 无法解析用户选择 '{query}'，候选={candidates}")
+            logger.warning(f"node_build_context: clarification selection unresolved, query={query}, candidates={candidates}")
 
     logger.info(
-        f"node_build_context: ContextBundle 组装完成 — "
-        f"历史消息数={len(bundle['history_messages'])}, "
-        f"已确认商品={bundle['confirmed_items']}, "
-        f"证据文档数={len(bundle['recent_evidence_docs'])}, "
-        f"待澄清={bool(bundle['pending_clarification'])}"
+        f"node_build_context completed: history={len(bundle['history_messages'])}, "
+        f"confirmed_items={len(bundle['confirmed_items'])}, "
+        f"evidence={len(bundle['recent_evidence_docs'])}, "
+        f"pending_clarification={bool(bundle['pending_clarification'])}"
     )
     add_done_task(session_id, node_name, is_stream)
     return state

@@ -1,3 +1,5 @@
+"""RQ enqueue adapter with a local-background-task fallback."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -9,6 +11,8 @@ from app.core.logger import logger
 
 @dataclass
 class EnqueueResult:
+    """Result returned by an ingestion enqueue attempt."""
+
     enqueued: bool
     job_id: str
     reason: str = ""
@@ -52,8 +56,8 @@ def enqueue_import_task(
             result_ttl=rq_config.result_ttl_seconds,
             failure_ttl=rq_config.failure_ttl_seconds,
         )
-        logger.info(f"[{task_id}] 已加入RQ队列：queue={rq_config.queue_name} job_id={job.id}")
+        logger.info(f"[{task_id}] Ingestion job enqueued: queue={rq_config.queue_name}, job_id={job.id}")
         return EnqueueResult(enqueued=True, job_id=job.id)
     except Exception as e:
-        logger.warning(f"[{task_id}] RQ入队失败，将回退FastAPI后台任务：{e}", exc_info=True)
+        logger.warning(f"[{task_id}] RQ enqueue failed; caller should use the local fallback: {e}", exc_info=True)
         return EnqueueResult(enqueued=False, job_id="", reason=str(e))
