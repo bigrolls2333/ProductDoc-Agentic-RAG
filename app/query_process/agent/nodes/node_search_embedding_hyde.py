@@ -55,8 +55,10 @@ def step_2_search_embedding_hyde(
     ranker_weights=(0.8, 0.2),  # Favor dense retrieval in the default blend.
     norm_score: bool = True,    # Normalize scores by default.
     output_fields=["chunk_id", "content", "canonical_name", "item_name", "doc_id", "file_title", "title"],
+    per_item_k=None,
 ):
     """Search Milvus with embeddings generated from the query and HyDE document."""
+    from app.query_process.product_retrieval import search_per_item, canonical_filter
     if not rewritten_query:
         raise ValueError("rewritten_query is required")
     if not hyde_doc:
@@ -81,24 +83,26 @@ def step_2_search_embedding_hyde(
         normalized_item_names = list(dict.fromkeys([
             normalized for v in item_names if (normalized := _normalize_name_key(v))
         ]))
-        quoted = ", ".join(f'"{v}"' for v in normalized_item_names)
-        expr = f"canonical_name in [{quoted}]"
+        expr = canonical_filter(normalized_item_names)
         logger.info(f"HyDE filter expression: {expr}")
     else:
         logger.info("HyDE retrieval has no product filter")
 
     try:
-        reqs = create_hybrid_search_requests(
-            dense_vector=embeddings.get("dense")[0],
-            sparse_vector=embeddings.get("sparse")[0],
-            expr=expr,
-            limit=req_limit,
-        )
-
         client = get_milvus_client()
         if not client:
             logger.error("Milvus client is unavailable")
             return []
+
+        if per_item_k is not None and item_names:
+            return search_per_item(item_names=item_names, per_item_k=per_item_k,
+                dense_vector=embeddings.get('dense')[0], sparse_vector=embeddings.get('sparse')[0],
+                client=client, collection_name=collection_name, create_requests=create_hybrid_search_requests,
+                search=hybrid_search, output_fields=output_fields, ranker_weights=ranker_weights,
+                norm_score=norm_score, req_limit=req_limit)
+
+        reqs = create_hybrid_search_requests(dense_vector=embeddings.get('dense')[0],
+            sparse_vector=embeddings.get('sparse')[0], expr=expr, limit=req_limit)
 
         logger.info(f"Executing HyDE hybrid search: weights={ranker_weights}, top_k={top_k}")
         res = hybrid_search(
@@ -123,6 +127,7 @@ def step_2_search_embedding_hyde(
 
 def node_search_embedding_hyde(state):
     """Generate a HyDE document, run hybrid retrieval, and update query state."""
+    from app.query_process.context_selection import context_policy, context_per_item_k
     logger.info("node_search_embedding_hyde started")
     add_running_task(state["session_id"], sys._getframe().f_code.co_name, state.get("is_stream"))
 
@@ -162,6 +167,7 @@ def node_search_embedding_hyde(state):
             hyde_doc=hyde_doc,
             item_names=item_names,
             top_k=5,
+            per_item_k=context_per_item_k(state) if context_policy(state) == 'item_balanced' else None,
         )
         
         hit_count = len(res[0]) if res and len(res) > 0 else 0

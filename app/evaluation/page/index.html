@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ProductDoc · 评测工作台</title><link rel="stylesheet" href="/static/workbench.css"></head>
+<body>
+<header><a class="brand" href="/">P<span>ProductDoc</span><small>评测工作台</small></a><nav><button class="active" data-tab="review">数据审核</button><button data-tab="experiments">实验与对比</button></nav><span class="local">本地工作区</span></header>
+<main>
+<div class="heading"><div><p class="eyebrow">EVALUATION WORKSPACE</p><h1 id="pageTitle">让每个判断，都有证据。</h1><p id="pageSub">核对原文、修正标注，再发布可追溯的数据版本。</p></div><button id="refresh" class="secondary">刷新数据</button></div>
+<div id="notice" role="status" hidden></div>
+<section id="reviewTab">
+<div class="toolbar"><label>数据版本<select id="dataset"></select></label><div id="datasetInfo" class="dataset-info"></div><button id="publish" class="primary">发布已审核版本</button></div>
+<div class="review-layout">
+<aside class="panel query-panel"><div class="panel-head"><h2>问题列表</h2><span id="queryCount" class="count">0</span></div><div class="filters"><input id="search" placeholder="搜索型号、问题或编号" aria-label="搜索问题"><select id="status"><option value="approved">已批准样本</option><option value="all">全部样本</option><option value="pending">待审样本</option></select><label class="check"><input type="checkbox" id="casesOnly">仅看 Bad Case</label></div><div id="queries"></div></aside>
+<article class="panel detail-panel"><div id="empty" class="empty"><span>◎</span><h2>选择一道问题开始审核</h2><p>参考事实、证据定位和实验中的失败记录会显示在这里。</p></div><div id="detail" hidden>
+<div class="panel-head"><div><span id="qid" class="eyebrow"></span><h2 id="question"></h2></div><span id="split" class="tag"></span></div>
+<div class="detail-section"><div class="section-title"><h3>参考答案</h3><label>文档是否足以回答<select id="answerable"><option value="true">可回答</option><option value="false">无文档答案</option></select></label></div><p class="hint">只保留回答问题所必需的事实。不同表述可作为替代证据；有前提的步骤要保留适用条件。</p><div id="facts"></div><button id="addFact" class="text-button">＋ 添加参考事实</button><details class="advanced"><summary>编辑证据组合与分组</summary><p class="hint">evidence_sets 外层为“或”，内层为“且”。修改后点击应用。</p><textarea id="factsJson" rows="8" aria-label="参考事实JSON"></textarea><label>独立检索问题（多轮样本需要）<input id="retrievalQuery"></label><label>分组<input id="groupId"></label><button id="applyFacts" class="secondary">应用事实编辑</button></details></div>
+<div class="detail-section"><div class="section-title"><h3>原文证据</h3><span id="evidenceCount" class="count"></span></div><div id="evidence"></div><details class="advanced"><summary>从检索片段添加原文证据</summary><label>来源片段<select id="anchorChunk"></select></label><label>连续原文（必须存在于片段内）<textarea id="anchorQuote" rows="3"></textarea></label><label>PDF物理页码<input id="anchorPage" type="number" min="1" placeholder="从1开始"></label><button id="addAnchor" class="secondary">添加到证据目录</button></details></div>
+<div class="detail-section"><h3>相关性标注与失败记录</h3><p class="hint">0 无关 · 1 有帮助 · 2 直接证据。列出全部正相关片段和失败案例的主要候选；其他标注保持原值。</p><div id="chunks"></div><div id="cases"></div></div>
+<div class="review-footer"><label>关联失败案例<select id="sourceCase"></select></label><label>审核人<input id="reviewer" placeholder="你的姓名或标识" maxlength="120"></label><label>审核说明<textarea id="notes" rows="3" placeholder="记录核对了哪些来源、修正原因及尚存疑问"></textarea></label><label class="check human-check"><input id="human" type="checkbox">我已人工核对问题、参考事实、全部正相关片段及证据定位</label><p class="hint">未勾选时保存为来源审核记录。未逐项复核的其他 AI 标注仍保留其来源，不会变为全量人工金标。</p><button id="saveReview" class="primary">保存审核决定</button><span id="revision" class="muted"></span></div>
+</div></article>
+<aside class="panel guide-panel"><p class="eyebrow">REVIEW NOTES</p><h3>审核的三个问题</h3><ol><li>原文真的支持这个结论吗？</li><li>参考答案是否要求了不必要的细节？</li><li>这是缺少证据，还是证据在排序、预算中丢失？</li></ol><div class="guide-separator"></div><h3>当前版本</h3><p id="provenance" class="muted"></p><p class="hint">发布创建新数据目录。已冻结的测试题不进入开发回流。</p></aside>
+</div></section>
+<section id="experimentsTab" hidden>
+<div class="experiment-grid"><article class="panel padded"><h2>创建实验</h2><p class="hint">复用冻结预测，重算新标注或模拟上下文预算。此入口不调用生成模型。</p><label>实验类型<select id="runKind"><option value="retrieval_replay">检索结果重评</option><option value="context_sweep">上下文选择消融</option></select></label><label>目标数据版本<select id="runDataset"></select></label><label id="sourceLabel">原预测数据版本<select id="sourceDataset"></select></label><label>预测报告（按 Ctrl / Command 多选）<select id="predictionReports" multiple size="5"></select></label><div id="sweepFields" hidden><label>Top-K（逗号分隔）<input id="contextKs" value="5,10,20"></label><label>字符预算（逗号分隔）<input id="budgets" value="6000,12000,24000"></label></div><button id="createRun" class="primary">创建并运行</button></article><article class="panel padded"><div class="section-title"><h2>任务记录</h2><button id="refreshJobs" class="text-button">刷新</button></div><p class="hint">任务串行执行，结果持久化；服务重启后，中断任务可重试。</p><div id="jobs"></div></article></div>
+<article class="panel padded comparison"><div class="section-title"><div><p class="eyebrow">EXPERIMENT COMPARISON</p><h2>结果对比</h2></div><div><select id="compareReport" aria-label="选择报告"></select><select id="compareWith" aria-label="选择对照报告"></select></div></div><div id="comparison"></div></article>
+</section>
+</main>
+<dialog id="publishDialog"><form method="dialog"><h2>发布审核后的新版本</h2><p class="hint">只发布本版本最新、尚未发布的审核决定。原数据版本保持不变。</p><div id="publishList"></div><label>新目录名称<input id="outputName" placeholder="productdoc-reviewed-v1" required pattern="[A-Za-z0-9][A-Za-z0-9_.-]*"></label><label>版本标识<input id="version" placeholder="0.4-reviewed" required></label><div class="dialog-actions"><button class="secondary" value="cancel">取消</button><button class="primary" id="confirmPublish" type="button">发布新版本</button></div></form></dialog>
+<script src="/static/workbench.js"></script></body></html>

@@ -1,0 +1,72 @@
+{
+  "provenance": "AI source review, not human gold. Drafts were prepared without baseline answers; corrections use original PDF text and selected rendered pages.",
+  "pending_scope_refinement": ["VAL-004", "VAL-012", "VAL-021", "VAL-027", "VAL-068"],
+  "equivalent_evidence": {
+    "ev_02b54dabd276bb2940da": ["ev_02b54dabd276bb2940da", "ev_fd2dd25c9a7dbc2e26f7", "ev_0ed11d0fdf7ce496adb3", "ev_525540893426d9c2282b", "ev_ad67592f13d419bea645", "ev_d9328573bca84e449b98", "ev_5ddbe25f7dcfae41444b", "ev_995e2ae176da8061457f", "ev_dcc6ff7d6ceaa99d88c7"],
+    "ev_24319be077a808be7f45": ["ev_24319be077a808be7f45", "ev_618c70d66c2f2f1eb635", "ev_c89477304d3492ac18af"],
+    "ev_1ac63d751a29e23033ad": ["ev_1ac63d751a29e23033ad", "ev_8a113a70b2792e90958c"],
+    "ev_25a429b470fcd1238cb1": ["ev_25a429b470fcd1238cb1", "ev_163e427b1a93ab970dc8"]
+  },
+  "extra_evidence": [
+    {"evidence_id":"ev_review_la_dcc", "doc_id":"doc_72983cc9b60f7f16", "quote":"[LA2608]interface Cellular-Ethernet2/0\n[LA2608-Cellular-Ethernet2/0]ip address cellular-allocated\n[LA2608-Cellular-Ethernet2/0]dialer enable-circular"},
+    {"evidence_id":"ev_review_p3030_type", "doc_id":"doc_9f71edd6407c6ace", "quote":"黑白激光打印机", "pdf_pages":[1], "visual_review_artifact":"tmp/pdfs/p3030_ocr/001.png"},
+    {"evidence_id":"ev_review_p3030_media", "doc_id":"doc_9f71edd6407c6ace", "quote":"请使用规格范围内的打印介质。", "pdf_pages":[69], "visual_review_artifact":"tmp/pdfs/p3030_ocr/069.png"},
+    {"evidence_id":"ev_review_p3030_toner", "doc_id":"doc_9f71edd6407c6ace", "quote":"清洁或更换新粉盒。", "pdf_pages":[69], "visual_review_artifact":"tmp/pdfs/p3030_ocr/069.png"},
+    {"evidence_id":"ev_review_p3030_feed", "doc_id":"doc_9f71edd6407c6ace", "quote":"清洁打印机进纸通道。", "pdf_pages":[69], "visual_review_artifact":"tmp/pdfs/p3030_ocr/069.png"},
+    {"evidence_id":"ev_review_p3030_jam_remove", "doc_id":"doc_9f71edd6407c6ace", "quote":"2. 将卡住的纸张轻轻地向外拉出。", "pdf_pages":[57], "visual_review_artifact":"tmp/pdfs/p3030_ocr/057.png"},
+    {"evidence_id":"ev_review_p3030_fuser", "doc_id":"doc_9f71edd6407c6ace", "quote":"注：· 在取定影单元卡纸时，请注意切勿触摸如下阴影部分区域，避免灼伤。"},
+    {"evidence_id":"ev_review_p3030_help", "doc_id":"doc_9f71edd6407c6ace", "quote":"您可以打开“打印首选项”，点击“帮助”按钮（仅适用于 Windows 系统）。", "pdf_pages":[47], "visual_review_artifact":"tmp/pdfs/p3030_ocr/047.png"}
+  ],
+  "reference_overrides": {
+    "VAL-001":[{"text":"LA2608通过3G/4G网络连接运营商无线控制器，向用户提供无线服务。","evidence_ids":["ev_f8b43fcd6485b9e541e3","ev_618c70d66c2f2f1eb635"],"evidence_sets":[["ev_f8b43fcd6485b9e541e3"],["ev_618c70d66c2f2f1eb635"]]}],
+    "VAL-003":[{"text":"H3C NR-1200W是企业级无线宽带路由器。","evidence_ids":["ev_1ac63d751a29e23033ad"]}],
+    "VAL-009":[{"text":"HUAWEI PixLab B5是打印机。","evidence_ids":["ev_02b54dabd276bb2940da"]}],
+    "VAL-022":[
+      {"text":"管理电脑与路由器LAN口同网段，缺省LAN IP为192.168.1.1，掩码255.255.255.0。","evidence_ids":["ev_5f418f1e6c46f6a0ad50"]},
+      {"text":"浏览器访问http://192.168.1.1。","evidence_ids":["ev_1525870fdf0c37bba630","ev_ce8f39fd65f688c793a1"],"evidence_sets":[["ev_1525870fdf0c37bba630"],["ev_ce8f39fd65f688c793a1"]]},
+      {"text":"用缺省admin/admin及验证码登录，用户名和密码区分大小写。","evidence_ids":["ev_e6a2fd35deedebc2b2aa","ev_7cf486543a545884e2b1"],"evidence_sets":[["ev_e6a2fd35deedebc2b2aa"],["ev_7cf486543a545884e2b1"]]}
+    ],
+    "VAL-035":[
+      {"text":"核对Cellular-Ethernet2/0获取运营商地址及DCC拨号配置。","evidence_ids":["ev_529a8291457c95b9b60b","ev_review_la_dcc"]},
+      {"text":"核对DNS解析、Cellular-Ethernet2/0默认路由及运营商无线控制器IP。","evidence_ids":["ev_e467ec4233d547b4010e"]},
+      {"text":"在无线控制器执行display wlan ap，R/M表示已建立连接；配置示例应作为核对项，不能断言确定故障原因。","evidence_ids":["ev_1a478f402cf8f9b43db9"]}
+    ],
+    "VAL-037":[
+      {"text":"无线运行不稳定时尝试其他无线信道。","evidence_ids":["ev_0619633aead729b37846"]},
+      {"text":"查看客户端列表的信号强度、连接速率等运行信息。","evidence_ids":["ev_cbce44238f6381e32c5e"]},
+      {"text":"使用系统自检检查配置与当前运行状态是否正常。","evidence_ids":["ev_5641b2b200fbe25bdefa"]}
+    ],
+    "VAL-041":[
+      {"text":"检查缺纸指示灯，缺纸时添加纸张。","evidence_ids":["ev_cfc03eba903f0bb813c8"]},
+      {"text":"检查卡纸指示灯，定位并小心取出卡纸。","evidence_ids":["ev_bb97e21f567c7b87a365"]},
+      {"text":"核对打印机背面是否预留10厘米以上空间，空间不足会卷曲卡纸。","evidence_ids":["ev_40c7e6cd33875d575995"]}
+    ],
+    "VAL-044":[
+      {"text":"检查纸张及介质是否符合规格。","evidence_ids":["ev_review_p3030_media"]},
+      {"text":"按对应打印缺陷检查、清洁或更换粉盒。","evidence_ids":["ev_review_p3030_toner"]},
+      {"text":"检查并清洁打印机进纸通道。","evidence_ids":["ev_review_p3030_feed"]}
+    ],
+    "VAL-064":[
+      {"text":"LA2608为室内无线网关。","evidence_ids":["ev_24319be077a808be7f45"]},
+      {"text":"NR-1200W为企业级无线宽带路由器。","evidence_ids":["ev_1ac63d751a29e23033ad"]}
+    ],
+    "VAL-111":[{"text":"基本打印设置查阅5.2打印设置；Windows也可从打印首选项的帮助进入使用指南。任一明确入口均可，不要求两个入口同时出现。","evidence_ids":["ev_2c53605561f8be19edcd","ev_review_p3030_help"],"evidence_sets":[["ev_2c53605561f8be19edcd"],["ev_review_p3030_help"]]}],
+    "VAL-119":[
+      {"text":"按卡纸部位处理，例如纸盒卡纸时打开纸盒、轻轻向外拉出纸张。","evidence_ids":["ev_review_p3030_jam_remove"]},
+      {"text":"清除后复原相应部件并开合前盖恢复打印；纸盒、后盖或双面单元路径任选与卡纸部位相符的一种。","evidence_ids":["ev_6d46e4a002e78da76940","ev_f102e77970fe5eaeb7fc","ev_e12ce65964b950778a8b"],"evidence_sets":[["ev_6d46e4a002e78da76940"],["ev_f102e77970fe5eaeb7fc"],["ev_e12ce65964b950778a8b"]]},
+      {"text":"若涉及定影单元，避免触摸图示高温区域以防灼伤。","evidence_ids":["ev_review_p3030_fuser"]}
+    ],
+    "VAL-149":[
+      {"text":"PixLab B5是华为打印机。","evidence_ids":["ev_02b54dabd276bb2940da"]},
+      {"text":"Pantum P3030是黑白激光打印机。","evidence_ids":["ev_review_p3030_type"]}
+    ],
+    "VAL-151":[
+      {"text":"LA2608是室内无线网关。","evidence_ids":["ev_24319be077a808be7f45"]},
+      {"text":"ER2100是路由器。","evidence_ids":["ev_25a429b470fcd1238cb1"]}
+    ],
+    "VAL-155":[
+      {"text":"LA2608是室内无线网关，属于网络设备。","evidence_ids":["ev_24319be077a808be7f45"]},
+      {"text":"PixLab B5是打印机，属于打印设备。","evidence_ids":["ev_02b54dabd276bb2940da"]}
+    ]
+  }
+}

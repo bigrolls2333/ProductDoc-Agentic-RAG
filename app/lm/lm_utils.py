@@ -3,9 +3,11 @@
 from langchain_openai import ChatOpenAI
 from langchain_core.exceptions import LangChainException
 from typing import Optional
+import os
 
 from app.conf.lm_config import lm_config
 from app.core.logger import logger
+from app.lm.request_options import non_thinking_body
 
 # Cache clients by model and response mode to avoid repeated initialization.
 _llm_client_cache = {}
@@ -26,7 +28,7 @@ def get_llm_client(model: Optional[str] = None, json_mode: bool = False) -> Chat
         raise ValueError("OPENAI_BASE_URL or OPENAI_API_BASE is required")
     logger.info(f"Initializing LLM client: model={target_model}, json_mode={json_mode}")
 
-    extra_body = {"enable_thinking": False}
+    extra_body = non_thinking_body(lm_config.base_url)
     model_kwargs = {}
     if json_mode:
         model_kwargs["response_format"] = {"type": "json_object"}
@@ -40,6 +42,8 @@ def get_llm_client(model: Optional[str] = None, json_mode: bool = False) -> Chat
             base_url=lm_config.base_url,
             extra_body=extra_body,
             model_kwargs=model_kwargs,
+            timeout=float(os.getenv("LLM_TIMEOUT_SECONDS", "60")),
+            max_retries=int(os.getenv("LLM_MAX_RETRIES", "2")),
         )
     except LangChainException as e:
         raise Exception(f"Failed to initialize LLM client for {target_model}: {e}") from e

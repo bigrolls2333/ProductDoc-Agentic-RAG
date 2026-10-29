@@ -49,3 +49,5 @@ scripts/rejudge_answer.py
 
 # Local evaluation datasets
 eval/*.jsonl
+eval/local/
+tmp/pdfs/

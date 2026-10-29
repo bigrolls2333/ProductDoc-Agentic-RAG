@@ -12,6 +12,7 @@ from app.lm.lm_utils import get_llm_client
 from app.query_process.agent.state import QueryGraphState
 from app.utils.task_utils import add_done_task, add_running_task
 from app.utils.eval_flag_utils import eval_mode, is_eval_enabled
+from app.query_process.subquery_retrieval import subquery_enabled, decomposition_instruction, validate_subqueries, SUBQUERY_VERSION
 
 
 DOC_RETRIEVAL_KEYWORDS = [
@@ -144,6 +145,8 @@ def _llm_decide_retrieval_plan(state: QueryGraphState) -> Dict:
 
 {("该产品历史上高频问题及检索策略参考：\n" + product_hint_text) if product_hint_text else ""}
 """
+    if subquery_enabled(state):
+        human_prompt += decomposition_instruction(item_names)
     try:
         llm = get_llm_client(json_mode=True)
         response = llm.invoke([
@@ -159,6 +162,13 @@ def _llm_decide_retrieval_plan(state: QueryGraphState) -> Dict:
             "reason": (result.get("reason") or "llm_tool_selection").strip(),
             "decided_by": "llm",
         }
+        if subquery_enabled(state):
+            try:
+                plan['subqueries'] = validate_subqueries(result.get('subqueries', []), item_names, query)
+                plan['subquery_status'] = 'planned' if plan['subqueries'] else 'no_expansion'
+            except ValueError as exc:
+                plan.update(subqueries=[], subquery_status='invalid_plan', subquery_error=str(exc))
+            plan['subquery_version'] = SUBQUERY_VERSION
         if not plan["use_embedding"] and not plan["use_web"] and not plan["use_hyde"]:
             plan["use_embedding"] = True
             plan["reason"] = (plan["reason"] + " | fallback: no tool selected, force embedding")
@@ -195,6 +205,8 @@ def build_retrieval_plan(state: QueryGraphState) -> Dict:
     if state.get("_no_web_override") or is_eval_enabled("EVAL_DISABLE_WEB"):
         plan["use_web"] = False
         plan["reason"] = (plan.get("reason") or "") + " | eval_disable_web"
+    if not subquery_enabled(state):
+        plan['subqueries'] = []
     return plan
 
 

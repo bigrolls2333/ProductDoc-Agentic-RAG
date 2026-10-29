@@ -1,0 +1,9 @@
+{
+  "reviewer_type": "ai_answer_audit",
+  "human_verified": false,
+  "policy": "Queue suspected rubric inconsistencies without changing original judge verdicts.",
+  "cases": [
+    {"query_id":"VAL-043", "policy":"ranked", "reason":"裁判判完整正确，但参考事实包含固定IP配置，实际答案没有该项。需要人工确认参考事实是否过度严格，以及裁判是否漏判。"},
+    {"query_id":"VAL-149", "policy":"ranked", "reason":"裁判判完整正确，但答案只确认P3030是打印机，参考事实要求黑白激光打印机。需要人工确认设备类型问题应采用的完整性粒度。"}
+  ]
+}

@@ -342,7 +342,7 @@ def step_5_align_item_names(query_results: List[Dict]) -> Dict:
         logger.info(f"Product resolution: no match above threshold for item={extracted_name}")
 
     result = {
-        "confirmed_item_names": list(set(confirmed_item_names)),
+        "confirmed_item_names": list(dict.fromkeys(confirmed_item_names)),
         "options": list(set(options))
     }
     logger.info(f"Product resolution alignment completed: {result}")

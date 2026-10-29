@@ -1,8 +1,14 @@
-# ProductDoc-Agentic-RAG
+# ProductDoc-Agent：商品文档检索与评测系统
 
-面向产品文档问答的 Agentic RAG 项目，覆盖文档导入、结构化检索、多轮上下文、证据自评和流式回答。
+面向商品文档的检索与评测系统，保留 Agentic RAG 问答入口，覆盖文档导入、结构化检索、多轮上下文、证据自评和流式回答。
 
-项目以 FastAPI 提供服务，以 LangGraph 编排有状态工作流，以 Milvus、MongoDB 和 MinIO 组成知识库基础设施。代码重点展示 AI 应用从“调用模型”走向“可观测、可恢复、可评估”的工程化设计。
+项目以 FastAPI 提供服务，以 LangGraph 编排有状态工作流，以 Milvus、MongoDB 和 MinIO 组成知识库基础设施。BGE-M3 dense+sparse、RRF 与 BGE Reranker 负责本地混合检索，Agent 按问题选择历史证据复用、HyDE、联网补搜或澄清。
+
+评测使用版本化语料、分级相关性标注（qrels）与 PDF 原文证据锚点，分别观察候选召回、重排和实际入模上下文。[评测指南](eval/README.md)提供可离线运行的公开样例，[审核工作台](eval/WORKBENCH.md)支持原文复核、Bad Case 分析、标注修订和新版本发布。
+
+当前开发集覆盖28份文档、2216个chunks、130道已通过AI来源审核的问题。四组召回对照的条件和结果见[评测报告](eval/DIVERSITY_RESULTS.md)。这些数据尚未经过独立人工核验，不作为人工金标或盲测成绩；真实文档、数据集、模型缓存及日志保留在本地。
+
+子查询扩展复用检索规划器，生成绑定已确认商品范围的少量子查询，与原查询、HyDE 共同召回并共享融合预算。该分支默认关闭，配置方法见[工作台与检索策略指南](eval/WORKBENCH.md#试用子查询扩展召回)。
 
 ## 项目概览
 
@@ -14,6 +20,9 @@
 - 上下文管理：将历史消息、已确认商品、最近证据、答案摘要和待澄清事项整理为结构化 `context_bundle`。
 - 工具选择：根据查询意图和时效性选择本地向量检索、HyDE 检索和 WebSearch MCP。
 - 证据处理：使用 RRF 融合多路召回结果，再通过 BGE Reranker 进行精排。
+- 受控检索扩展：复用上游 `item_names` 按商品召回，支持预算内轮询选择，以及最多3条子查询的可选召回分支。
+- 标准化评测：比较 BM25、dense、sparse、hybrid 与 hybrid＋reranker，输出 Recall、Precision、MRR、nDCG 及标注覆盖率。
+- 审核回流：定位过滤、召回、排序与预算损失，复核原文后发布标注新版本，再进行回归评测。
 - Agent Loop：自评证据充分性，必要时触发一次联网补搜，再回到融合、重排和自评流程。
 - 可靠执行：文件内容哈希生成稳定 `doc_id`，Redis 分布式锁抑制重复导入，RQ 提供可选后台队列，SQLite Checkpoint 支持图状态持久化。
 - 可观测性：记录路由决策、工具调用、召回数量、重排结果、自评状态、Checkpoint 和耗时 Trace。
@@ -30,9 +39,11 @@ flowchart LR
     P --> S1[向量检索]
     P --> S2[HyDE 检索]
     P --> S3[WebSearch MCP]
+    P -. 可选 .-> S4[商品约束子查询]
     S1 --> F[RRF 融合]
     S2 --> F
     S3 --> F
+    S4 --> F
     F --> RR[BGE Reranker]
     RR --> E[证据自评]
     E -->|充分| A[答案生成]
@@ -46,6 +57,12 @@ flowchart LR
     M --> V[切分与向量化]
     V --> DB[(Milvus)]
     V --> PM[(MongoDB 商品记忆)]
+
+    DB --> SNAP[冻结语料与证据锚点]
+    SNAP --> EV[检索与答案评测]
+    EV --> BC[Bad Case 审核]
+    BC --> VER[标注版本发布]
+    VER --> EV
 ```
 
 ### 文档导入链路
@@ -73,7 +90,7 @@ Query API
   → query intent
   → item confirmation
   → retrieval plan
-  → embedding + HyDE + Web 并行召回
+  → embedding + HyDE + Web + 可选子查询并行召回
   → RRF + BGE Reranker
   → self-evaluation
   → optional Web retry
@@ -92,7 +109,9 @@ Query API
 | HITL 澄清 | 商品型号存在歧义时保留待澄清状态，让下一轮对话继续完成确认 | [`node_item_name_confirm.py`](app/query_process/agent/nodes/node_item_name_confirm.py)、[`mongo_session_memory_utils.py`](app/clients/mongo_session_memory_utils.py) |
 | 可靠导入 | 通过稳定 ID、分布式锁、后台队列和状态轮询支撑长任务 | [`file_hash_utils.py`](app/utils/file_hash_utils.py)、[`redis_lock_utils.py`](app/utils/redis_lock_utils.py)、[`import_queue.py`](app/utils/import_queue.py) |
 | Checkpoint 与 Trace | 保存工作流状态，记录可复盘的决策链路 | [`checkpoint_config.py`](app/conf/checkpoint_config.py)、[`query_trace_utils.py`](app/utils/query_trace_utils.py) |
-| 评测 | 按路由、商品确认、检索、答案、自评和重试拆分质量维度 | [`eval/README.md`](eval/README.md)、[`scripts/eval_comprehensive.py`](scripts/eval_comprehensive.py) |
+| 检索规划与子查询 | 在已有规划调用中生成商品约束子查询，共享分支融合权重 | [`node_retrieval_plan.py`](app/query_process/agent/nodes/node_retrieval_plan.py)、[`subquery_retrieval.py`](app/query_process/subquery_retrieval.py) |
+| 标准检索与答案评测 | 版本化语料、qrels、原文事实和引用支持评测 | [`app/evaluation/`](app/evaluation/)、[`scripts/retrieval_eval.py`](scripts/retrieval_eval.py)、[`scripts/eval_answer_trust.py`](scripts/eval_answer_trust.py) |
+| 审核与实验工作台 | Bad Case 队列、修订冲突检查、版本发布与持久化任务 | [`api.py`](app/evaluation/api.py)、[`workbench.py`](app/evaluation/workbench.py)、[`eval/WORKBENCH.md`](eval/WORKBENCH.md) |
 
 ## 工程设计亮点
 
@@ -110,7 +129,9 @@ Query API
 
 ### 检索与 Agent Loop
 
-`node_retrieval_plan` 输出三个工具开关：本地向量检索、HyDE 检索和 WebSearch。多个分支并行执行，`node_rrf` 做名次融合，`node_rerank` 进行语义精排。
+`node_retrieval_plan` 输出本地向量检索、HyDE 和 WebSearch 开关。启用子查询实验时，同一次规划调用额外生成最多3条子查询，绑定已确认商品的下标；子查询共享一路RRF权重，避免按扩展数量重复投票。多个分支并行执行，`node_rrf` 做名次融合，`node_rerank` 进行语义精排。
+
+上下文默认使用 `ranked`；可选 `item_balanced` 复用上游商品识别结果，按商品分别召回与保留候选，再按 A1、B1、A2、B2 轮询纳入字符预算。超预算片段跳过并继续选择，Trace 记录缺失商品与预算丢弃。该策略不使用商品领域关键词或特定表格章节规则。
 
 `node_self_eval` 根据问题、召回证据和当前重试次数判断证据是否充分。`insufficient_retry` 只允许触发一次 Web 补搜，补搜结果重新进入 RRF、Rerank 和自评，形成有上限的 Agent Loop。
 
@@ -240,6 +261,14 @@ uv run python -m app.query_process.api.query_service
 - Query Swagger：<http://127.0.0.1:8001/docs>
 - Import Swagger：<http://127.0.0.1:8000/docs>
 
+评测审核工作台可独立启动，无需初始化模型或连接上述数据库：
+
+```bash
+uv run python -m uvicorn app.evaluation.api:app --host 127.0.0.1 --port 8090
+```
+
+打开 <http://127.0.0.1:8090/>，选择 `example` 查看公开样例。真实数据版本放入 `eval/local/` 后会出现在列表中。
+
 首次导入前，需要准备 BGE-M3 与 BGE Reranker 模型，并将路径写入 `.env`。WebSearch、MinerU 和模型服务属于可插拔的外部依赖，按需启用即可。
 
 ### 5. 启动 RQ Worker（可选）
@@ -264,21 +293,22 @@ uv run python -m app.import_process.worker
 | Document DB | `MONGO_URL`、`MONGO_DB_NAME` | 历史、会话记忆和商品记忆 |
 | Object Storage | `MINIO_ENDPOINT`、`MINIO_ACCESS_KEY`、`MINIO_SECRET_KEY` | 原始文件和图片存储 |
 | Agent | `CHECKPOINT_ENABLED`、`QUERY_TRACE_PATH` | 状态恢复和 Trace 输出 |
+| 检索实验 | `CONTEXT_SELECTION_POLICY`、`CONTEXT_PER_ITEM_K`、`SUBQUERY_RETRIEVAL_ENABLED` | 上下文选择、每商品候选数量及可选子查询分支 |
 | Async jobs | `REDIS_*`、`RQ_*` | 任务状态、上传锁和后台队列 |
 
 ## 评测与观测
 
-项目将质量拆成可定位的维度：查询路由、商品确认、文档需求路由、检索计划、证据命中、答案质量、自评准确性和重试效果。
+标准评测与完整 Agent 行为检查分开运行。检索评测使用冻结语料和 qrels，以 Recall@K、Precision@K、MRR、nDCG@K 和标注覆盖率比较策略；答案评测使用实际入模上下文，检查参考事实、忠实度、引用完整性与拒答。数据格式与完整命令见[评测指南](eval/README.md)及[协议参考](eval/BENCHMARK.md)。
 
-评测脚本支持：
+以下公开样例不需要 API、模型权重或数据库：
 
-- 路由冒烟：`python scripts/eval_routing.py --intent-only`
-- 综合评测：`python scripts/eval_comprehensive.py --dimensions routing,retrieval,answer`
-- 消融分析：`python scripts/eval_ablation.py --variants core`
-- Trace 汇总：`python scripts/analyze_trace_metrics.py --input logs/*.json`
-- Agent 行为验证：`python scripts/verify_agentic.py`
+```bash
+uv run python scripts/retrieval_eval.py validate --dataset eval/examples/retrieval
+uv run python scripts/retrieval_eval.py run --dataset eval/examples/retrieval --variants bm25 --candidate-k 3 --context-k 1 --output logs/retrieval_example.json
+uv run python scripts/eval_answer_trust.py --dataset eval/examples/retrieval --answers eval/examples/answers.jsonl --judgments eval/examples/judgments.jsonl --output logs/answer_example.json
+```
 
-本地验证集和生成报告属于运行时数据，默认放在 `eval/*.jsonl` 与 `logs/`，不会进入公开仓库。使用自有数据集时，通过 `--dataset` 传入路径。
+公开样例使用虚构数据，只演示协议与评测流程。真实数据在 `eval/local/`，完整实验产物在 `logs/`，均不进入公开仓库。完整 Agent 的路由与工具行为可另用 `scripts/eval_comprehensive.py` 检查，其规则通过率不等同于标准检索指标。
 
 查询 Trace 默认写入 `logs/query_trace.jsonl`，可用于分析：
 
@@ -296,6 +326,7 @@ uv run python -m app.import_process.worker
 ├── app/
 │   ├── conf/                 # 环境变量驱动的配置
 │   ├── clients/              # Milvus、MongoDB、MinIO、Redis 客户端
+│   ├── evaluation/           # 数据协议、指标、归因与审核工作台
 │   ├── import_process/       # 文档导入图与导入 API
 │   ├── query_process/        # 查询图、Agent 节点与 Query API
 │   ├── lm/                   # LLM、Embedding、Reranker 封装
@@ -303,7 +334,8 @@ uv run python -m app.import_process.worker
 │   └── utils/                # 任务状态、锁、队列、Trace 等基础能力
 ├── prompts/                  # 可版本化的提示词模板
 ├── scripts/                  # 评测、分析与验证脚本
-├── eval/                     # 评测说明与本地验证约定
+├── eval/                     # 评测协议、公开样例与结果摘要
+├── tests/                    # 指标、证据、检索与审核一致性验证
 ├── milvus/                   # Milvus 本地部署编排
 ├── docker-compose.redis.yml  # Redis 本地部署编排
 ├── .env.example              # 脱敏环境变量模板

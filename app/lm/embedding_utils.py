@@ -7,8 +7,17 @@ from app.conf.embedding_config import embedding_config
 
 # Keep one model instance per process because model loading is expensive.
 _bge_m3_ef = None
+_bge_m3_init_lock = threading.Lock()
 
 def get_bge_m3_ef():
+    """Initialize the shared model once, including concurrent first requests."""
+    if _bge_m3_ef is not None:
+        return _bge_m3_ef
+    with _bge_m3_init_lock:
+        return _load_bge_m3_ef()
+
+
+def _load_bge_m3_ef():
     """Return the cached BGE-M3 embedding function, loading it on first use."""
     global _bge_m3_ef
     if _bge_m3_ef is not None:

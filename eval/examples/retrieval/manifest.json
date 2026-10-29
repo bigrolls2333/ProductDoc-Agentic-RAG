@@ -1,0 +1,9 @@
+{
+  "schema_version": "productdoc.benchmark.v1",
+  "name": "synthetic-productdoc-example",
+  "version": "1.0",
+  "corpus_version": "synthetic-manuals-v1",
+  "index_version": "synthetic-chunks-v1",
+  "annotation_status": "synthetic-example-only",
+  "description": "Invented products and facts. Exercises the benchmark contract; never report as real project quality."
+}

@@ -52,7 +52,7 @@ def build_query_trace(state: Dict[str, Any], status: str = "completed", error: s
     answer = state.get("answer") or ""
 
     trace = {
-        "trace_version": "agent_trace_v2",
+        "trace_version": "agent_trace_v3",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "status": status,
         "error": error,
@@ -63,16 +63,21 @@ def build_query_trace(state: Dict[str, Any], status: str = "completed", error: s
         "query_route": state.get("query_route", ""),
         "doc_need_route": state.get("doc_need_route", ""),
         "retrieval_plan": state.get("retrieval_plan") or {},
+        "subquery_trace": state.get('subquery_trace') or {},
         "counts": {
             "embedding": _safe_len(embedding_chunks),
             "hyde": _safe_len(hyde_embedding_chunks),
+            "subquery": sum(_safe_len(rows) for rows in state.get('subquery_chunks', [])),
             "web": _safe_len(web_search_docs),
             "rrf": _safe_len(rrf_chunks),
             "rerank": _safe_len(reranked_docs),
         },
         "top_reranked_docs": _summarize_docs(reranked_docs),
+        "answer_context_trace": state.get("answer_context_trace") or {},
+        "answer_context_docs": state.get("answer_context_docs") or [],
         "answer_length": len(answer),
         "answer_preview": answer[:300],
+        "answer": answer,
         "duration_ms": duration_ms,
 
         "agent_trace": {

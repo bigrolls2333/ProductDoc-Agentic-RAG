@@ -1,0 +1,5 @@
+{"query_id":"DEMO-001","chunk_id":"demo-a-network","relevance":2,"evidence_ids":["demo-e-network"]}
+{"query_id":"DEMO-001","chunk_id":"demo-a-power","relevance":2,"evidence_ids":["demo-e-power"]}
+{"query_id":"DEMO-001","chunk_id":"demo-b-network","relevance":0,"evidence_ids":[]}
+{"query_id":"DEMO-002","chunk_id":"demo-a-network","relevance":0,"evidence_ids":[]}
+{"query_id":"DEMO-002","chunk_id":"demo-a-power","relevance":0,"evidence_ids":[]}

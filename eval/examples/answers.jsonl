@@ -1,0 +1,2 @@
+{"record_id":"demo-answer-1","query_id":"DEMO-001","context_source":"actual_prompt","answer":"DEMO-A 支持有线以太网与 4G 上网。[demo-a-network] 使用 12V 直流电源。[demo-a-power]","abstained":false,"context_docs":[{"chunk_id":"demo-a-network","text":"DEMO-A 网关支持有线以太网上网与 4G 上网。"},{"chunk_id":"demo-a-power","text":"DEMO-A 网关使用 12V 直流电源。"}]}
+{"record_id":"demo-answer-2","query_id":"DEMO-002","context_source":"actual_prompt","answer":"文档没有说明是否支持 5G，无法确认。","abstained":true,"context_docs":[{"chunk_id":"demo-a-network","text":"DEMO-A 网关支持有线以太网上网与 4G 上网。"}]}

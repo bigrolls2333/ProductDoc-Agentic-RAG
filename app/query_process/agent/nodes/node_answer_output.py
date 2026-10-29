@@ -11,6 +11,7 @@ from app.clients.mongo_history_utils import save_chat_message
 from app.utils.query_trace_utils import append_query_trace
 from app.clients.mongo_session_memory_utils import upsert_session_memory
 import re
+import hashlib
 
 _IMAGE_BLOCK_MARKER = "【图片】"
 MAX_CONTEXT_CHARS = 12000
@@ -77,6 +78,7 @@ def step_1_check_answer(state) -> bool:
 
 def step_2_construct_prompt(state: QueryGraphState) -> str:
   """Build the answer prompt from query, bounded history, and ranked evidence."""
+  from app.query_process.context_selection import select_context_documents, context_policy, context_per_item_k
   original_query = state.get("original_query", "")
   rewritten_query = state.get("rewritten_query", "")
   question = rewritten_query if rewritten_query else original_query
@@ -103,54 +105,39 @@ def step_2_construct_prompt(state: QueryGraphState) -> str:
       logger.info(f"Reusing context evidence: route={doc_need_route}, count={len(history_docs)}")
       reranked_docs = history_docs
 
-  # Format ranked evidence while enforcing the prompt budget.
-  docs = []
-  used = 0
-  for i, doc in enumerate(reranked_docs, start=1):
-    text = (doc.get("text") or "").strip()
-    if not text:
+  policy = context_policy(state)
+  candidates = reranked_docs
+  if policy != 'ranked' and doc_need_route not in ('answer_from_context', 'reuse_context_evidence'):
+    candidates = state.get('context_candidate_docs') or reranked_docs
+  included_docs, context_str, selection_trace = select_context_documents(
+    candidates, question, policy=policy, budget=MAX_CONTEXT_CHARS,
+    item_names=item_names, per_item_k=context_per_item_k(state),
+    ranked_k=max(1, len(reranked_docs)), pool_k=50, max_docs=50 if policy == 'ranked' else 20)
+  used = len(context_str)
+  state["answer_context_docs"] = included_docs
+  state["answer_context_trace"] = {
+    **selection_trace,
+    "context_source": "actual_prompt",
+    "budget_chars": MAX_CONTEXT_CHARS,
+    "context_chars": len(context_str),
+    "included_count": len(included_docs),
+    "omitted_count": len(candidates) - len(included_docs),
+    "context_sha256": hashlib.sha256(context_str.encode("utf-8")).hexdigest(),
+  }
+
+
+  # Bound each history addition before appending; count only its incremental cost.
+  history_parts = []
+  for msg in history:
+    role, text = msg.get('role'), msg.get('text')
+    if role not in ('user', 'assistant') or not text:
       continue
-    source = doc.get("source") or ""
-    chunk_id = doc.get("chunk_id")
-    url = (doc.get("url") or "").strip()
-    title = (doc.get("title") or "").strip()
-    score = doc.get("score")
-
-    meta_parts = [f"[{i}]"]
-    if source:
-      meta_parts.append(f"[{source}]")
-    if chunk_id:
-      meta_parts.append(f"[chunk_id={chunk_id}]")
-    if url:
-      meta_parts.append(f"[url={url}]")
-    if score is not None:
-      meta_parts.append(f"[score={float(score):.4f}]")
-    if title:
-      meta_parts.append(f"[title={title}]")
-    doc = " ".join(meta_parts) + "\n" + text
-    if used + len(doc) > MAX_CONTEXT_CHARS:
+    part = ('用户' if role == 'user' else '助手') + ': ' + text + '\n'
+    if used + len(part) > MAX_CONTEXT_CHARS:
       break
-    docs.append(doc)
-    used += len(doc) + 2
-  context_str = "\n\n".join(docs) if docs else "无参考内容"
-
-
-  # Append history while the shared context budget has capacity.
-  history_str = ""
-  if history:
-    for msg in history:
-      role = msg.get("role")
-      text = msg.get("text")
-      if role == "user" and text:
-        history_str += f"用户: {text}\n"
-      elif role == "assistant" and text:
-        history_str += f"助手: {text}\n"
-        
-      used += len(history_str) + 2
-      if used > MAX_CONTEXT_CHARS:
-        break
-  else:
-    history_str = "无历史对话"
+    history_parts.append(part)
+    used += len(part)
+  history_str = ''.join(history_parts) if history_parts else '无历史对话'
 
   item_names_str = ", ".join(item_names) if item_names else "无指定商品"
 
@@ -162,6 +149,7 @@ def step_2_construct_prompt(state: QueryGraphState) -> str:
   )
 
   logger.debug(f"Answer prompt assembled: length={len(prompt)}")
+  state["answer_context_trace"]["prompt_sha256"] = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
   return prompt
 
@@ -374,6 +362,9 @@ def _write_session_memory(state: QueryGraphState, evidence_docs: list) -> None:
 
 def _maybe_write_product_memory(state: QueryGraphState, evidence_docs: list) -> None:
     """Persist product memory only for resolved, evidence-backed answers."""
+    from app.utils.eval_flag_utils import is_eval_enabled
+    if is_eval_enabled("EVAL_DISABLE_PRODUCT_MEMORY_WRITE"):
+        return
     if state.get("query_route") != "product_doc_qa":
         return
     if state.get("doc_need_route") not in ("need_retrieval", "reuse_context_evidence"):

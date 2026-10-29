@@ -14,6 +14,7 @@ from app.query_process.agent.nodes.node_rerank import node_rerank
 from app.query_process.agent.nodes.node_rrf import node_rrf
 from app.query_process.agent.nodes.node_search_embedding import node_search_embedding
 from app.query_process.agent.nodes.node_search_embedding_hyde import node_search_embedding_hyde
+from app.query_process.agent.nodes.node_search_subqueries import node_search_subqueries
 from app.query_process.agent.nodes.node_web_search_mcp import node_web_search_mcp
 from app.query_process.agent.nodes.node_self_eval import node_self_eval
 from app.query_process.agent.nodes.node_retry_web import node_retry_web
@@ -44,6 +45,7 @@ builder.add_node("node_retrieval_plan", _tracked_node("node_retrieval_plan", nod
 builder.add_node("node_multi_search", _tracked_node("node_multi_search", lambda x: x))  # Fan-out marker
 builder.add_node("node_search_embedding", _tracked_node("node_search_embedding", node_search_embedding))  # Dense vector retrieval
 builder.add_node("node_search_embedding_hyde", _tracked_node("node_search_embedding_hyde", node_search_embedding_hyde))
+builder.add_node("node_search_subqueries", _tracked_node("node_search_subqueries", node_search_subqueries))
 builder.add_node("node_web_search_mcp", _tracked_node("node_web_search_mcp", node_web_search_mcp))
 builder.add_node("node_join", _tracked_node("node_join", lambda x: {}))  # Fan-in marker
 builder.add_node("node_rrf", _tracked_node("node_rrf", node_rrf))  # Rank fusion
@@ -114,11 +116,13 @@ builder.add_edge("node_retrieval_plan", "node_multi_search")
 builder.add_edge("node_multi_search", "node_search_embedding")
 builder.add_edge("node_multi_search", "node_search_embedding_hyde")
 builder.add_edge("node_multi_search", "node_web_search_mcp")
+builder.add_edge("node_multi_search", "node_search_subqueries")
 
 # Merge retrieval branches before ranking.
 builder.add_edge("node_search_embedding", "node_join")
 builder.add_edge("node_search_embedding_hyde", "node_join")
 builder.add_edge("node_web_search_mcp", "node_join")
+builder.add_edge("node_search_subqueries", "node_join")
 
 # Rank, rerank, evaluate, and optionally retry once before answering.
 builder.add_edge("node_join", "node_rrf")

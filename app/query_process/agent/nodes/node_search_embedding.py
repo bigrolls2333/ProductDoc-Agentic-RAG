@@ -18,6 +18,8 @@ def _normalize_name_key(value: str) -> str:
 
 def node_search_embedding(state):
     """Run filtered dense-and-sparse retrieval against the Milvus collection."""
+    from app.query_process.context_selection import context_policy, context_per_item_k
+    from app.query_process.product_retrieval import search_per_item, canonical_filter
     logger.info("node_search_embedding started")
     add_running_task(state["session_id"],sys._getframe().f_code.co_name,state["is_stream"])
 
@@ -50,28 +52,21 @@ def node_search_embedding(state):
     normalized_item_names = list(dict.fromkeys([
         normalized for v in item_names if (normalized := _normalize_name_key(v))
     ]))
-    quoted = ", ".join(f'"{v}"' for v in normalized_item_names)
-    expr = f"canonical_name in [{quoted}]"
+    expr = canonical_filter(normalized_item_names)
     logger.info(f"Milvus filter expression: {expr}")
-
-    reqs = create_hybrid_search_requests(
-        dense_vector=dense_vec,
-        sparse_vector=sparse_vec,
-        expr=expr,
-        limit=10,
-    )
 
     logger.info("Executing Milvus hybrid search")
     client = get_milvus_client()
-    res = hybrid_search(
-        client=client,
-        collection_name=collection_name,
-        reqs=reqs,
-        ranker_weights=(0.8, 0.2),
-        norm_score=True,
-        limit=5,
-        output_fields=["chunk_id", "content", "canonical_name", "item_name", "doc_id", "file_title", "title"],
-    )
+    fields = ["chunk_id", "content", "canonical_name", "item_name", "doc_id", "file_title", "title"]
+    if context_policy(state) == 'item_balanced':
+        res = search_per_item(item_names=normalized_item_names, per_item_k=context_per_item_k(state),
+                              dense_vector=dense_vec, sparse_vector=sparse_vec, client=client,
+                              collection_name=collection_name, create_requests=create_hybrid_search_requests,
+                              search=hybrid_search, output_fields=fields)
+    else:
+        reqs = create_hybrid_search_requests(dense_vector=dense_vec, sparse_vector=sparse_vec, expr=expr, limit=10)
+        res = hybrid_search(client=client, collection_name=collection_name, reqs=reqs,
+                            ranker_weights=(0.8, 0.2), norm_score=True, limit=5, output_fields=fields)
 
     hit_count = len(res[0]) if res and len(res) > 0 else 0
     logger.info(f"node_search_embedding completed: hits={hit_count}")

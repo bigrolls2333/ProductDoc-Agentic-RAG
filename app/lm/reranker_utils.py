@@ -1,6 +1,7 @@
 """Local cross-encoder reranking utilities."""
 
 from pathlib import Path
+import threading
 
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
@@ -8,6 +9,7 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 from app.conf.reranker_config import reranker_config
 
 _reranker_model = None
+_reranker_init_lock = threading.Lock()
 
 
 class TransformersReranker:
@@ -61,6 +63,11 @@ def _resolve_reranker_path(raw_path: str) -> str:
 
 def get_reranker_model():
     """Return the process-local reranker instance."""
+    with _reranker_init_lock:
+        return _load_reranker_model()
+
+
+def _load_reranker_model():
     global _reranker_model
     if _reranker_model is None:
         _reranker_model = TransformersReranker(

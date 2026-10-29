@@ -1,0 +1,4474 @@
+{
+  "dataset_sha256": "7d3813e91ed6908788b73bf5f0134e3170159b31d82e1980adb070229415946b",
+  "profiles": {
+    "original": {
+      "queries": 25,
+      "products": 7,
+      "product_question_counts": {
+        "H3CLA2608室内无线网关": 11,
+        "H3CNR-1200W企业级无线宽带路由器": 3,
+        "HUAWEIPIXLABB5打印机": 5,
+        "AOLYNKCB304N网桥": 1,
+        "H3CER2100企业级路由器": 3,
+        "LENOVOM7208WPRO激光多功能一体机": 1,
+        "PANTUMP3030黑白激光打印机": 5
+      },
+      "categories": {
+        "product_fact": 4,
+        "operation_step": 4,
+        "troubleshooting": 8,
+        "multi_item": 4,
+        "no_answer": 5
+      },
+      "styles": {
+        "legacy_unspecified": 25
+      },
+      "multi_product": 4,
+      "multi_turn": 0,
+      "table_seed": 0,
+      "table_seed_labeled": 0,
+      "answerable": 20,
+      "unanswerable": 5,
+      "human_verified": 0
+    },
+    "new": {
+      "queries": 105,
+      "products": 27,
+      "product_question_counts": {
+        "H3CMSR-XS系列路由器": 5,
+        "打印机": 5,
+        "H3CNR-1200W企业级无线宽带路由器": 6,
+        "HUAWEIB3-430笔记本电脑": 5,
+        "华为B3-241H显示器": 3,
+        "华为C7平板": 6,
+        "H3CMER系列路由器": 6,
+        "H3CER2100企业级路由器": 6,
+        "Z26打印机": 6,
+        "HUAWEIPIXLABB5打印机": 5,
+        "华为平板C5平板": 6,
+        "H3CMSRWINET系列云简路由器": 4,
+        "H3CLA2608室内无线网关": 4,
+        "联想Z26MIC打印机": 4,
+        "LENOVOLJ2268激光打印机": 3,
+        "华为擎云G540笔记本电脑": 5,
+        "绿米小米多功能网关网关": 3,
+        "HUAWEIMATESTATIONB515台式电脑": 5,
+        "HUAWEIB5-420笔记本": 6,
+        "AOLYNKCB304N网桥": 3,
+        "HUAWEIB7-410笔记本电脑": 3,
+        "华为C5E平板": 3,
+        "LENOVOM7268激光多功能一体机": 3,
+        "奔图P3500黑白单功能激光打印机": 3,
+        "RS-PRORS-12数字万用表": 3,
+        "LENOVOM7208WPRO激光多功能一体机": 4,
+        "H3CMSR系列开放多业务路由器": 3
+      },
+      "categories": {
+        "table_lookup": 17,
+        "operation_step": 24,
+        "constraint_check": 15,
+        "multi_aspect": 8,
+        "troubleshooting": 16,
+        "multi_turn": 6,
+        "product_fact": 6,
+        "multi_item": 13
+      },
+      "styles": {
+        "formal": 53,
+        "colloquial": 46,
+        "contextual": 6
+      },
+      "multi_product": 13,
+      "multi_turn": 6,
+      "table_seed": 31,
+      "table_seed_labeled": 105,
+      "answerable": 105,
+      "unanswerable": 0,
+      "human_verified": 0
+    },
+    "all": {
+      "queries": 130,
+      "products": 28,
+      "product_question_counts": {
+        "H3CLA2608室内无线网关": 15,
+        "H3CNR-1200W企业级无线宽带路由器": 9,
+        "HUAWEIPIXLABB5打印机": 10,
+        "AOLYNKCB304N网桥": 4,
+        "H3CER2100企业级路由器": 9,
+        "LENOVOM7208WPRO激光多功能一体机": 5,
+        "PANTUMP3030黑白激光打印机": 5,
+        "H3CMSR-XS系列路由器": 5,
+        "打印机": 5,
+        "HUAWEIB3-430笔记本电脑": 5,
+        "华为B3-241H显示器": 3,
+        "华为C7平板": 6,
+        "H3CMER系列路由器": 6,
+        "Z26打印机": 6,
+        "华为平板C5平板": 6,
+        "H3CMSRWINET系列云简路由器": 4,
+        "联想Z26MIC打印机": 4,
+        "LENOVOLJ2268激光打印机": 3,
+        "华为擎云G540笔记本电脑": 5,
+        "绿米小米多功能网关网关": 3,
+        "HUAWEIMATESTATIONB515台式电脑": 5,
+        "HUAWEIB5-420笔记本": 6,
+        "HUAWEIB7-410笔记本电脑": 3,
+        "华为C5E平板": 3,
+        "LENOVOM7268激光多功能一体机": 3,
+        "奔图P3500黑白单功能激光打印机": 3,
+        "RS-PRORS-12数字万用表": 3,
+        "H3CMSR系列开放多业务路由器": 3
+      },
+      "categories": {
+        "product_fact": 10,
+        "operation_step": 28,
+        "troubleshooting": 24,
+        "multi_item": 17,
+        "no_answer": 5,
+        "table_lookup": 17,
+        "constraint_check": 15,
+        "multi_aspect": 8,
+        "multi_turn": 6
+      },
+      "styles": {
+        "legacy_unspecified": 25,
+        "formal": 53,
+        "colloquial": 46,
+        "contextual": 6
+      },
+      "multi_product": 17,
+      "multi_turn": 6,
+      "table_seed": 31,
+      "table_seed_labeled": 105,
+      "answerable": 125,
+      "unanswerable": 5,
+      "human_verified": 0
+    }
+  },
+  "pending_new": 21,
+  "legacy_pending": 246,
+  "corpus_documents": 28,
+  "corpus_chunks": 2216,
+  "exact_duplicate_questions": 0,
+  "identical_reference_anchor_sets": 0,
+  "pending_case_queue": {
+    "added": 21,
+    "total": 21
+  },
+  "retrieval": {
+    "original": {
+      "main": {
+        "candidates": {
+          "hit@1": {
+            "mean": 0.75,
+            "n": 20
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@3": {
+            "mean": 0.95,
+            "n": 20
+          },
+          "hit@5": {
+            "mean": 0.95,
+            "n": 20
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "judged_fraction@1": {
+            "mean": 1.0,
+            "n": 25
+          },
+          "judged_fraction@10": {
+            "mean": 0.964,
+            "n": 25
+          },
+          "judged_fraction@20": {
+            "mean": 0.952,
+            "n": 25
+          },
+          "judged_fraction@3": {
+            "mean": 0.9333333333333333,
+            "n": 25
+          },
+          "judged_fraction@5": {
+            "mean": 0.96,
+            "n": 25
+          },
+          "judged_fraction@50": {
+            "mean": 0.9508,
+            "n": 25
+          },
+          "mrr@1": {
+            "mean": 0.75,
+            "n": 20
+          },
+          "mrr@10": {
+            "mean": 0.8571428571428571,
+            "n": 20
+          },
+          "mrr@20": {
+            "mean": 0.8571428571428571,
+            "n": 20
+          },
+          "mrr@3": {
+            "mean": 0.85,
+            "n": 20
+          },
+          "mrr@5": {
+            "mean": 0.85,
+            "n": 20
+          },
+          "mrr@50": {
+            "mean": 0.8571428571428571,
+            "n": 20
+          },
+          "ndcg@1": {
+            "mean": 0.7166666666666667,
+            "n": 20
+          },
+          "ndcg@10": {
+            "mean": 0.6653955369731022,
+            "n": 20
+          },
+          "ndcg@20": {
+            "mean": 0.69031644320431,
+            "n": 20
+          },
+          "ndcg@3": {
+            "mean": 0.6658527676257995,
+            "n": 20
+          },
+          "ndcg@5": {
+            "mean": 0.6691733946308314,
+            "n": 20
+          },
+          "ndcg@50": {
+            "mean": 0.6802043222690529,
+            "n": 20
+          },
+          "precision@1": {
+            "mean": 0.75,
+            "n": 20
+          },
+          "precision@10": {
+            "mean": 0.435,
+            "n": 20
+          },
+          "precision@20": {
+            "mean": 0.3125,
+            "n": 20
+          },
+          "precision@3": {
+            "mean": 0.65,
+            "n": 20
+          },
+          "precision@5": {
+            "mean": 0.59,
+            "n": 20
+          },
+          "precision@50": {
+            "mean": 0.13,
+            "n": 20
+          },
+          "recall@1": {
+            "mean": 0.14063706563706563,
+            "n": 20
+          },
+          "recall@10": {
+            "mean": 0.5237104393354394,
+            "n": 20
+          },
+          "recall@20": {
+            "mean": 0.6412045893295893,
+            "n": 20
+          },
+          "recall@3": {
+            "mean": 0.3098334942084942,
+            "n": 20
+          },
+          "recall@5": {
+            "mean": 0.4238430150930151,
+            "n": 20
+          },
+          "recall@50": {
+            "mean": 0.6545974464724464,
+            "n": 20
+          },
+          "relevant_total": {
+            "mean": 10.6,
+            "n": 25
+          },
+          "returned": {
+            "mean": 16.6,
+            "n": 25
+          },
+          "unjudged@1": {
+            "mean": 0,
+            "n": 25
+          },
+          "unjudged@10": {
+            "mean": 0.32,
+            "n": 25
+          },
+          "unjudged@20": {
+            "mean": 0.84,
+            "n": 25
+          },
+          "unjudged@3": {
+            "mean": 0.2,
+            "n": 25
+          },
+          "unjudged@5": {
+            "mean": 0.2,
+            "n": 25
+          },
+          "unjudged@50": {
+            "mean": 0.92,
+            "n": 25
+          }
+        },
+        "ranking": {
+          "hit@1": {
+            "mean": 0.75,
+            "n": 20
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@3": {
+            "mean": 0.95,
+            "n": 20
+          },
+          "hit@5": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "judged_fraction@1": {
+            "mean": 0.84,
+            "n": 25
+          },
+          "judged_fraction@10": {
+            "mean": 0.952,
+            "n": 25
+          },
+          "judged_fraction@20": {
+            "mean": 0.952,
+            "n": 25
+          },
+          "judged_fraction@3": {
+            "mean": 0.9066666666666666,
+            "n": 25
+          },
+          "judged_fraction@5": {
+            "mean": 0.928,
+            "n": 25
+          },
+          "judged_fraction@50": {
+            "mean": 0.9508,
+            "n": 25
+          },
+          "mrr@1": {
+            "mean": 0.75,
+            "n": 20
+          },
+          "mrr@10": {
+            "mean": 0.8625,
+            "n": 20
+          },
+          "mrr@20": {
+            "mean": 0.8625,
+            "n": 20
+          },
+          "mrr@3": {
+            "mean": 0.85,
+            "n": 20
+          },
+          "mrr@5": {
+            "mean": 0.8625,
+            "n": 20
+          },
+          "mrr@50": {
+            "mean": 0.8625,
+            "n": 20
+          },
+          "ndcg@1": {
+            "mean": 0.6166666666666667,
+            "n": 20
+          },
+          "ndcg@10": {
+            "mean": 0.6243044669974434,
+            "n": 20
+          },
+          "ndcg@20": {
+            "mean": 0.6539930809679834,
+            "n": 20
+          },
+          "ndcg@3": {
+            "mean": 0.6121547991115378,
+            "n": 20
+          },
+          "ndcg@5": {
+            "mean": 0.6209054960282211,
+            "n": 20
+          },
+          "ndcg@50": {
+            "mean": 0.6523533822878459,
+            "n": 20
+          },
+          "precision@1": {
+            "mean": 0.75,
+            "n": 20
+          },
+          "precision@10": {
+            "mean": 0.415,
+            "n": 20
+          },
+          "precision@20": {
+            "mean": 0.31,
+            "n": 20
+          },
+          "precision@3": {
+            "mean": 0.6833333333333333,
+            "n": 20
+          },
+          "precision@5": {
+            "mean": 0.5800000000000001,
+            "n": 20
+          },
+          "precision@50": {
+            "mean": 0.13,
+            "n": 20
+          },
+          "recall@1": {
+            "mean": 0.13554777992277992,
+            "n": 20
+          },
+          "recall@10": {
+            "mean": 0.5301616795366796,
+            "n": 20
+          },
+          "recall@20": {
+            "mean": 0.6373355417105417,
+            "n": 20
+          },
+          "recall@3": {
+            "mean": 0.3275361969111969,
+            "n": 20
+          },
+          "recall@5": {
+            "mean": 0.44490486427986425,
+            "n": 20
+          },
+          "recall@50": {
+            "mean": 0.6545974464724464,
+            "n": 20
+          },
+          "relevant_total": {
+            "mean": 10.6,
+            "n": 25
+          },
+          "returned": {
+            "mean": 16.6,
+            "n": 25
+          },
+          "unjudged@1": {
+            "mean": 0.16,
+            "n": 25
+          },
+          "unjudged@10": {
+            "mean": 0.44,
+            "n": 25
+          },
+          "unjudged@20": {
+            "mean": 0.84,
+            "n": 25
+          },
+          "unjudged@3": {
+            "mean": 0.28,
+            "n": 25
+          },
+          "unjudged@5": {
+            "mean": 0.36,
+            "n": 25
+          },
+          "unjudged@50": {
+            "mean": 0.92,
+            "n": 25
+          }
+        },
+        "total": 25
+      },
+      "main_hyde": {
+        "candidates": {
+          "hit@1": {
+            "mean": 0.8,
+            "n": 20
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@3": {
+            "mean": 0.95,
+            "n": 20
+          },
+          "hit@5": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "judged_fraction@1": {
+            "mean": 1.0,
+            "n": 25
+          },
+          "judged_fraction@10": {
+            "mean": 0.956,
+            "n": 25
+          },
+          "judged_fraction@20": {
+            "mean": 0.956,
+            "n": 25
+          },
+          "judged_fraction@3": {
+            "mean": 0.96,
+            "n": 25
+          },
+          "judged_fraction@5": {
+            "mean": 0.96,
+            "n": 25
+          },
+          "judged_fraction@50": {
+            "mean": 0.9568,
+            "n": 25
+          },
+          "mrr@1": {
+            "mean": 0.8,
+            "n": 20
+          },
+          "mrr@10": {
+            "mean": 0.885,
+            "n": 20
+          },
+          "mrr@20": {
+            "mean": 0.885,
+            "n": 20
+          },
+          "mrr@3": {
+            "mean": 0.875,
+            "n": 20
+          },
+          "mrr@5": {
+            "mean": 0.885,
+            "n": 20
+          },
+          "mrr@50": {
+            "mean": 0.885,
+            "n": 20
+          },
+          "ndcg@1": {
+            "mean": 0.8,
+            "n": 20
+          },
+          "ndcg@10": {
+            "mean": 0.7030934716884188,
+            "n": 20
+          },
+          "ndcg@20": {
+            "mean": 0.7011450803138585,
+            "n": 20
+          },
+          "ndcg@3": {
+            "mean": 0.7048178793982954,
+            "n": 20
+          },
+          "ndcg@5": {
+            "mean": 0.6805667350149838,
+            "n": 20
+          },
+          "ndcg@50": {
+            "mean": 0.6964274625350653,
+            "n": 20
+          },
+          "precision@1": {
+            "mean": 0.8,
+            "n": 20
+          },
+          "precision@10": {
+            "mean": 0.47000000000000003,
+            "n": 20
+          },
+          "precision@20": {
+            "mean": 0.315,
+            "n": 20
+          },
+          "precision@3": {
+            "mean": 0.6833333333333333,
+            "n": 20
+          },
+          "precision@5": {
+            "mean": 0.58,
+            "n": 20
+          },
+          "precision@50": {
+            "mean": 0.133,
+            "n": 20
+          },
+          "recall@1": {
+            "mean": 0.14290979290979292,
+            "n": 20
+          },
+          "recall@10": {
+            "mean": 0.5513376038376039,
+            "n": 20
+          },
+          "recall@20": {
+            "mean": 0.6454661723411723,
+            "n": 20
+          },
+          "recall@3": {
+            "mean": 0.3247144465894466,
+            "n": 20
+          },
+          "recall@5": {
+            "mean": 0.43511758511758514,
+            "n": 20
+          },
+          "recall@50": {
+            "mean": 0.6658530771030771,
+            "n": 20
+          },
+          "relevant_total": {
+            "mean": 10.6,
+            "n": 25
+          },
+          "returned": {
+            "mean": 16.6,
+            "n": 25
+          },
+          "unjudged@1": {
+            "mean": 0,
+            "n": 25
+          },
+          "unjudged@10": {
+            "mean": 0.4,
+            "n": 25
+          },
+          "unjudged@20": {
+            "mean": 0.76,
+            "n": 25
+          },
+          "unjudged@3": {
+            "mean": 0.12,
+            "n": 25
+          },
+          "unjudged@5": {
+            "mean": 0.2,
+            "n": 25
+          },
+          "unjudged@50": {
+            "mean": 0.8,
+            "n": 25
+          }
+        },
+        "ranking": {
+          "hit@1": {
+            "mean": 0.8,
+            "n": 20
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@3": {
+            "mean": 0.95,
+            "n": 20
+          },
+          "hit@5": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "judged_fraction@1": {
+            "mean": 0.88,
+            "n": 25
+          },
+          "judged_fraction@10": {
+            "mean": 0.956,
+            "n": 25
+          },
+          "judged_fraction@20": {
+            "mean": 0.958,
+            "n": 25
+          },
+          "judged_fraction@3": {
+            "mean": 0.92,
+            "n": 25
+          },
+          "judged_fraction@5": {
+            "mean": 0.936,
+            "n": 25
+          },
+          "judged_fraction@50": {
+            "mean": 0.9568,
+            "n": 25
+          },
+          "mrr@1": {
+            "mean": 0.8,
+            "n": 20
+          },
+          "mrr@10": {
+            "mean": 0.8875,
+            "n": 20
+          },
+          "mrr@20": {
+            "mean": 0.8875,
+            "n": 20
+          },
+          "mrr@3": {
+            "mean": 0.875,
+            "n": 20
+          },
+          "mrr@5": {
+            "mean": 0.8875,
+            "n": 20
+          },
+          "mrr@50": {
+            "mean": 0.8875,
+            "n": 20
+          },
+          "ndcg@1": {
+            "mean": 0.6333333333333333,
+            "n": 20
+          },
+          "ndcg@10": {
+            "mean": 0.629140674895873,
+            "n": 20
+          },
+          "ndcg@20": {
+            "mean": 0.6573743304011019,
+            "n": 20
+          },
+          "ndcg@3": {
+            "mean": 0.6160654551617274,
+            "n": 20
+          },
+          "ndcg@5": {
+            "mean": 0.6336156362905081,
+            "n": 20
+          },
+          "ndcg@50": {
+            "mean": 0.6563442809832654,
+            "n": 20
+          },
+          "precision@1": {
+            "mean": 0.8,
+            "n": 20
+          },
+          "precision@10": {
+            "mean": 0.425,
+            "n": 20
+          },
+          "precision@20": {
+            "mean": 0.3175,
+            "n": 20
+          },
+          "precision@3": {
+            "mean": 0.6833333333333333,
+            "n": 20
+          },
+          "precision@5": {
+            "mean": 0.6,
+            "n": 20
+          },
+          "precision@50": {
+            "mean": 0.133,
+            "n": 20
+          },
+          "recall@1": {
+            "mean": 0.14179777992277992,
+            "n": 20
+          },
+          "recall@10": {
+            "mean": 0.5358314320814321,
+            "n": 20
+          },
+          "recall@20": {
+            "mean": 0.6485911723411724,
+            "n": 20
+          },
+          "recall@3": {
+            "mean": 0.3275361969111969,
+            "n": 20
+          },
+          "recall@5": {
+            "mean": 0.45472629285129285,
+            "n": 20
+          },
+          "recall@50": {
+            "mean": 0.6658530771030771,
+            "n": 20
+          },
+          "relevant_total": {
+            "mean": 10.6,
+            "n": 25
+          },
+          "returned": {
+            "mean": 16.6,
+            "n": 25
+          },
+          "unjudged@1": {
+            "mean": 0.12,
+            "n": 25
+          },
+          "unjudged@10": {
+            "mean": 0.4,
+            "n": 25
+          },
+          "unjudged@20": {
+            "mean": 0.72,
+            "n": 25
+          },
+          "unjudged@3": {
+            "mean": 0.24,
+            "n": 25
+          },
+          "unjudged@5": {
+            "mean": 0.32,
+            "n": 25
+          },
+          "unjudged@50": {
+            "mean": 0.8,
+            "n": 25
+          }
+        },
+        "total": 25
+      },
+      "main_subquery": {
+        "candidates": {
+          "hit@1": {
+            "mean": 0.85,
+            "n": 20
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@3": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@5": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "judged_fraction@1": {
+            "mean": 0.96,
+            "n": 25
+          },
+          "judged_fraction@10": {
+            "mean": 0.9480000000000001,
+            "n": 25
+          },
+          "judged_fraction@20": {
+            "mean": 0.948,
+            "n": 25
+          },
+          "judged_fraction@3": {
+            "mean": 0.9333333333333333,
+            "n": 25
+          },
+          "judged_fraction@5": {
+            "mean": 0.96,
+            "n": 25
+          },
+          "judged_fraction@50": {
+            "mean": 0.9488,
+            "n": 25
+          },
+          "mrr@1": {
+            "mean": 0.85,
+            "n": 20
+          },
+          "mrr@10": {
+            "mean": 0.9166666666666666,
+            "n": 20
+          },
+          "mrr@20": {
+            "mean": 0.9166666666666666,
+            "n": 20
+          },
+          "mrr@3": {
+            "mean": 0.9166666666666666,
+            "n": 20
+          },
+          "mrr@5": {
+            "mean": 0.9166666666666666,
+            "n": 20
+          },
+          "mrr@50": {
+            "mean": 0.9166666666666666,
+            "n": 20
+          },
+          "ndcg@1": {
+            "mean": 0.7833333333333333,
+            "n": 20
+          },
+          "ndcg@10": {
+            "mean": 0.6672299012205651,
+            "n": 20
+          },
+          "ndcg@20": {
+            "mean": 0.6872935671300742,
+            "n": 20
+          },
+          "ndcg@3": {
+            "mean": 0.6979625026952073,
+            "n": 20
+          },
+          "ndcg@5": {
+            "mean": 0.680987140713854,
+            "n": 20
+          },
+          "ndcg@50": {
+            "mean": 0.6878210906435835,
+            "n": 20
+          },
+          "precision@1": {
+            "mean": 0.85,
+            "n": 20
+          },
+          "precision@10": {
+            "mean": 0.43,
+            "n": 20
+          },
+          "precision@20": {
+            "mean": 0.31,
+            "n": 20
+          },
+          "precision@3": {
+            "mean": 0.6833333333333333,
+            "n": 20
+          },
+          "precision@5": {
+            "mean": 0.6,
+            "n": 20
+          },
+          "precision@50": {
+            "mean": 0.131,
+            "n": 20
+          },
+          "recall@1": {
+            "mean": 0.1479287323037323,
+            "n": 20
+          },
+          "recall@10": {
+            "mean": 0.5283235345735345,
+            "n": 20
+          },
+          "recall@20": {
+            "mean": 0.6401358663858664,
+            "n": 20
+          },
+          "recall@3": {
+            "mean": 0.3202501608751609,
+            "n": 20
+          },
+          "recall@5": {
+            "mean": 0.4350037293787294,
+            "n": 20
+          },
+          "recall@50": {
+            "mean": 0.6605227711477711,
+            "n": 20
+          },
+          "relevant_total": {
+            "mean": 10.6,
+            "n": 25
+          },
+          "returned": {
+            "mean": 16.6,
+            "n": 25
+          },
+          "unjudged@1": {
+            "mean": 0.04,
+            "n": 25
+          },
+          "unjudged@10": {
+            "mean": 0.48,
+            "n": 25
+          },
+          "unjudged@20": {
+            "mean": 0.92,
+            "n": 25
+          },
+          "unjudged@3": {
+            "mean": 0.2,
+            "n": 25
+          },
+          "unjudged@5": {
+            "mean": 0.2,
+            "n": 25
+          },
+          "unjudged@50": {
+            "mean": 0.96,
+            "n": 25
+          }
+        },
+        "ranking": {
+          "hit@1": {
+            "mean": 0.75,
+            "n": 20
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@3": {
+            "mean": 0.95,
+            "n": 20
+          },
+          "hit@5": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "judged_fraction@1": {
+            "mean": 0.84,
+            "n": 25
+          },
+          "judged_fraction@10": {
+            "mean": 0.952,
+            "n": 25
+          },
+          "judged_fraction@20": {
+            "mean": 0.95,
+            "n": 25
+          },
+          "judged_fraction@3": {
+            "mean": 0.9066666666666666,
+            "n": 25
+          },
+          "judged_fraction@5": {
+            "mean": 0.928,
+            "n": 25
+          },
+          "judged_fraction@50": {
+            "mean": 0.9488,
+            "n": 25
+          },
+          "mrr@1": {
+            "mean": 0.75,
+            "n": 20
+          },
+          "mrr@10": {
+            "mean": 0.8625,
+            "n": 20
+          },
+          "mrr@20": {
+            "mean": 0.8625,
+            "n": 20
+          },
+          "mrr@3": {
+            "mean": 0.85,
+            "n": 20
+          },
+          "mrr@5": {
+            "mean": 0.8625,
+            "n": 20
+          },
+          "mrr@50": {
+            "mean": 0.8625,
+            "n": 20
+          },
+          "ndcg@1": {
+            "mean": 0.6166666666666667,
+            "n": 20
+          },
+          "ndcg@10": {
+            "mean": 0.6338350086020517,
+            "n": 20
+          },
+          "ndcg@20": {
+            "mean": 0.6657106679334301,
+            "n": 20
+          },
+          "ndcg@3": {
+            "mean": 0.6167906190539415,
+            "n": 20
+          },
+          "ndcg@5": {
+            "mean": 0.6224965818806583,
+            "n": 20
+          },
+          "ndcg@50": {
+            "mean": 0.6546083494473206,
+            "n": 20
+          },
+          "precision@1": {
+            "mean": 0.75,
+            "n": 20
+          },
+          "precision@10": {
+            "mean": 0.43,
+            "n": 20
+          },
+          "precision@20": {
+            "mean": 0.325,
+            "n": 20
+          },
+          "precision@3": {
+            "mean": 0.7,
+            "n": 20
+          },
+          "precision@5": {
+            "mean": 0.58,
+            "n": 20
+          },
+          "precision@50": {
+            "mean": 0.131,
+            "n": 20
+          },
+          "recall@1": {
+            "mean": 0.13554777992277992,
+            "n": 20
+          },
+          "recall@10": {
+            "mean": 0.5403077834327834,
+            "n": 20
+          },
+          "recall@20": {
+            "mean": 0.6573977711477711,
+            "n": 20
+          },
+          "recall@3": {
+            "mean": 0.3290513484263484,
+            "n": 20
+          },
+          "recall@5": {
+            "mean": 0.4440390634140634,
+            "n": 20
+          },
+          "recall@50": {
+            "mean": 0.6605227711477711,
+            "n": 20
+          },
+          "relevant_total": {
+            "mean": 10.6,
+            "n": 25
+          },
+          "returned": {
+            "mean": 16.6,
+            "n": 25
+          },
+          "unjudged@1": {
+            "mean": 0.16,
+            "n": 25
+          },
+          "unjudged@10": {
+            "mean": 0.44,
+            "n": 25
+          },
+          "unjudged@20": {
+            "mean": 0.88,
+            "n": 25
+          },
+          "unjudged@3": {
+            "mean": 0.28,
+            "n": 25
+          },
+          "unjudged@5": {
+            "mean": 0.36,
+            "n": 25
+          },
+          "unjudged@50": {
+            "mean": 0.96,
+            "n": 25
+          }
+        },
+        "total": 25
+      },
+      "main_hyde_subquery": {
+        "candidates": {
+          "hit@1": {
+            "mean": 0.8,
+            "n": 20
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@3": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@5": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "judged_fraction@1": {
+            "mean": 0.96,
+            "n": 25
+          },
+          "judged_fraction@10": {
+            "mean": 0.956,
+            "n": 25
+          },
+          "judged_fraction@20": {
+            "mean": 0.95,
+            "n": 25
+          },
+          "judged_fraction@3": {
+            "mean": 0.9466666666666667,
+            "n": 25
+          },
+          "judged_fraction@5": {
+            "mean": 0.9440000000000001,
+            "n": 25
+          },
+          "judged_fraction@50": {
+            "mean": 0.9528,
+            "n": 25
+          },
+          "mrr@1": {
+            "mean": 0.8,
+            "n": 20
+          },
+          "mrr@10": {
+            "mean": 0.8833333333333333,
+            "n": 20
+          },
+          "mrr@20": {
+            "mean": 0.8833333333333333,
+            "n": 20
+          },
+          "mrr@3": {
+            "mean": 0.8833333333333333,
+            "n": 20
+          },
+          "mrr@5": {
+            "mean": 0.8833333333333333,
+            "n": 20
+          },
+          "mrr@50": {
+            "mean": 0.8833333333333333,
+            "n": 20
+          },
+          "ndcg@1": {
+            "mean": 0.7666666666666667,
+            "n": 20
+          },
+          "ndcg@10": {
+            "mean": 0.6853742809899886,
+            "n": 20
+          },
+          "ndcg@20": {
+            "mean": 0.7000726455904941,
+            "n": 20
+          },
+          "ndcg@3": {
+            "mean": 0.7134636781665654,
+            "n": 20
+          },
+          "ndcg@5": {
+            "mean": 0.6760912904044261,
+            "n": 20
+          },
+          "ndcg@50": {
+            "mean": 0.6959224945312564,
+            "n": 20
+          },
+          "precision@1": {
+            "mean": 0.8,
+            "n": 20
+          },
+          "precision@10": {
+            "mean": 0.445,
+            "n": 20
+          },
+          "precision@20": {
+            "mean": 0.32,
+            "n": 20
+          },
+          "precision@3": {
+            "mean": 0.7166666666666667,
+            "n": 20
+          },
+          "precision@5": {
+            "mean": 0.5700000000000001,
+            "n": 20
+          },
+          "precision@50": {
+            "mean": 0.134,
+            "n": 20
+          },
+          "recall@1": {
+            "mean": 0.14290979290979292,
+            "n": 20
+          },
+          "recall@10": {
+            "mean": 0.5437726687726687,
+            "n": 20
+          },
+          "recall@20": {
+            "mean": 0.6538806745056746,
+            "n": 20
+          },
+          "recall@3": {
+            "mean": 0.3390001608751609,
+            "n": 20
+          },
+          "recall@5": {
+            "mean": 0.4392571955071955,
+            "n": 20
+          },
+          "recall@50": {
+            "mean": 0.6703985316485317,
+            "n": 20
+          },
+          "relevant_total": {
+            "mean": 10.6,
+            "n": 25
+          },
+          "returned": {
+            "mean": 16.6,
+            "n": 25
+          },
+          "unjudged@1": {
+            "mean": 0.04,
+            "n": 25
+          },
+          "unjudged@10": {
+            "mean": 0.4,
+            "n": 25
+          },
+          "unjudged@20": {
+            "mean": 0.88,
+            "n": 25
+          },
+          "unjudged@3": {
+            "mean": 0.16,
+            "n": 25
+          },
+          "unjudged@5": {
+            "mean": 0.28,
+            "n": 25
+          },
+          "unjudged@50": {
+            "mean": 0.88,
+            "n": 25
+          }
+        },
+        "ranking": {
+          "hit@1": {
+            "mean": 0.75,
+            "n": 20
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@3": {
+            "mean": 0.95,
+            "n": 20
+          },
+          "hit@5": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 20
+          },
+          "judged_fraction@1": {
+            "mean": 0.84,
+            "n": 25
+          },
+          "judged_fraction@10": {
+            "mean": 0.952,
+            "n": 25
+          },
+          "judged_fraction@20": {
+            "mean": 0.954,
+            "n": 25
+          },
+          "judged_fraction@3": {
+            "mean": 0.9066666666666666,
+            "n": 25
+          },
+          "judged_fraction@5": {
+            "mean": 0.928,
+            "n": 25
+          },
+          "judged_fraction@50": {
+            "mean": 0.9528,
+            "n": 25
+          },
+          "mrr@1": {
+            "mean": 0.75,
+            "n": 20
+          },
+          "mrr@10": {
+            "mean": 0.8625,
+            "n": 20
+          },
+          "mrr@20": {
+            "mean": 0.8625,
+            "n": 20
+          },
+          "mrr@3": {
+            "mean": 0.85,
+            "n": 20
+          },
+          "mrr@5": {
+            "mean": 0.8625,
+            "n": 20
+          },
+          "mrr@50": {
+            "mean": 0.8625,
+            "n": 20
+          },
+          "ndcg@1": {
+            "mean": 0.6166666666666667,
+            "n": 20
+          },
+          "ndcg@10": {
+            "mean": 0.6247179194373944,
+            "n": 20
+          },
+          "ndcg@20": {
+            "mean": 0.6626982462510703,
+            "n": 20
+          },
+          "ndcg@3": {
+            "mean": 0.6121547991115378,
+            "n": 20
+          },
+          "ndcg@5": {
+            "mean": 0.6332629802327756,
+            "n": 20
+          },
+          "ndcg@50": {
+            "mean": 0.6573847454256897,
+            "n": 20
+          },
+          "precision@1": {
+            "mean": 0.75,
+            "n": 20
+          },
+          "precision@10": {
+            "mean": 0.42,
+            "n": 20
+          },
+          "precision@20": {
+            "mean": 0.325,
+            "n": 20
+          },
+          "precision@3": {
+            "mean": 0.6833333333333333,
+            "n": 20
+          },
+          "precision@5": {
+            "mean": 0.61,
+            "n": 20
+          },
+          "precision@50": {
+            "mean": 0.134,
+            "n": 20
+          },
+          "recall@1": {
+            "mean": 0.13554777992277992,
+            "n": 20
+          },
+          "recall@10": {
+            "mean": 0.5358314320814321,
+            "n": 20
+          },
+          "recall@20": {
+            "mean": 0.6593866268866269,
+            "n": 20
+          },
+          "recall@3": {
+            "mean": 0.3275361969111969,
+            "n": 20
+          },
+          "recall@5": {
+            "mean": 0.45624144436644437,
+            "n": 20
+          },
+          "recall@50": {
+            "mean": 0.6703985316485317,
+            "n": 20
+          },
+          "relevant_total": {
+            "mean": 10.6,
+            "n": 25
+          },
+          "returned": {
+            "mean": 16.6,
+            "n": 25
+          },
+          "unjudged@1": {
+            "mean": 0.16,
+            "n": 25
+          },
+          "unjudged@10": {
+            "mean": 0.44,
+            "n": 25
+          },
+          "unjudged@20": {
+            "mean": 0.8,
+            "n": 25
+          },
+          "unjudged@3": {
+            "mean": 0.28,
+            "n": 25
+          },
+          "unjudged@5": {
+            "mean": 0.36,
+            "n": 25
+          },
+          "unjudged@50": {
+            "mean": 0.88,
+            "n": 25
+          }
+        },
+        "total": 25
+      }
+    },
+    "new": {
+      "main": {
+        "candidates": {
+          "hit@1": {
+            "mean": 0.8857142857142857,
+            "n": 105
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@3": {
+            "mean": 0.9714285714285714,
+            "n": 105
+          },
+          "hit@5": {
+            "mean": 0.9904761904761905,
+            "n": 105
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "judged_fraction@1": {
+            "mean": 0.9809523809523809,
+            "n": 105
+          },
+          "judged_fraction@10": {
+            "mean": 0.9666666666666667,
+            "n": 105
+          },
+          "judged_fraction@20": {
+            "mean": 0.9733082706766917,
+            "n": 105
+          },
+          "judged_fraction@3": {
+            "mean": 0.9650793650793651,
+            "n": 105
+          },
+          "judged_fraction@5": {
+            "mean": 0.9619047619047619,
+            "n": 105
+          },
+          "judged_fraction@50": {
+            "mean": 0.9737844611528822,
+            "n": 105
+          },
+          "mrr@1": {
+            "mean": 0.8857142857142857,
+            "n": 105
+          },
+          "mrr@10": {
+            "mean": 0.9296825396825397,
+            "n": 105
+          },
+          "mrr@20": {
+            "mean": 0.9296825396825397,
+            "n": 105
+          },
+          "mrr@3": {
+            "mean": 0.9238095238095239,
+            "n": 105
+          },
+          "mrr@5": {
+            "mean": 0.9280952380952381,
+            "n": 105
+          },
+          "mrr@50": {
+            "mean": 0.9296825396825397,
+            "n": 105
+          },
+          "ndcg@1": {
+            "mean": 0.8476190476190476,
+            "n": 105
+          },
+          "ndcg@10": {
+            "mean": 0.8209351419677664,
+            "n": 105
+          },
+          "ndcg@20": {
+            "mean": 0.8359801346592998,
+            "n": 105
+          },
+          "ndcg@3": {
+            "mean": 0.8107458677687528,
+            "n": 105
+          },
+          "ndcg@5": {
+            "mean": 0.7964586671265441,
+            "n": 105
+          },
+          "ndcg@50": {
+            "mean": 0.8409584332942691,
+            "n": 105
+          },
+          "precision@1": {
+            "mean": 0.8857142857142857,
+            "n": 105
+          },
+          "precision@10": {
+            "mean": 0.2914285714285714,
+            "n": 105
+          },
+          "precision@20": {
+            "mean": 0.1680952380952381,
+            "n": 105
+          },
+          "precision@3": {
+            "mean": 0.6158730158730159,
+            "n": 105
+          },
+          "precision@5": {
+            "mean": 0.45142857142857146,
+            "n": 105
+          },
+          "precision@50": {
+            "mean": 0.07161904761904762,
+            "n": 105
+          },
+          "recall@1": {
+            "mean": 0.3611397151998656,
+            "n": 105
+          },
+          "recall@10": {
+            "mean": 0.7968101500281951,
+            "n": 105
+          },
+          "recall@20": {
+            "mean": 0.8471106757347359,
+            "n": 105
+          },
+          "recall@3": {
+            "mean": 0.6243978622324486,
+            "n": 105
+          },
+          "recall@5": {
+            "mean": 0.6870804027495757,
+            "n": 105
+          },
+          "recall@50": {
+            "mean": 0.8675777530739937,
+            "n": 105
+          },
+          "relevant_total": {
+            "mean": 4.457142857142857,
+            "n": 105
+          },
+          "returned": {
+            "mean": 20.885714285714286,
+            "n": 105
+          },
+          "unjudged@1": {
+            "mean": 0.01904761904761905,
+            "n": 105
+          },
+          "unjudged@10": {
+            "mean": 0.3333333333333333,
+            "n": 105
+          },
+          "unjudged@20": {
+            "mean": 0.5047619047619047,
+            "n": 105
+          },
+          "unjudged@3": {
+            "mean": 0.10476190476190476,
+            "n": 105
+          },
+          "unjudged@5": {
+            "mean": 0.19047619047619047,
+            "n": 105
+          },
+          "unjudged@50": {
+            "mean": 0.5523809523809524,
+            "n": 105
+          }
+        },
+        "ranking": {
+          "hit@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@3": {
+            "mean": 0.9619047619047619,
+            "n": 105
+          },
+          "hit@5": {
+            "mean": 0.9809523809523809,
+            "n": 105
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "judged_fraction@1": {
+            "mean": 0.9714285714285714,
+            "n": 105
+          },
+          "judged_fraction@10": {
+            "mean": 0.9704761904761905,
+            "n": 105
+          },
+          "judged_fraction@20": {
+            "mean": 0.9728320802005013,
+            "n": 105
+          },
+          "judged_fraction@3": {
+            "mean": 0.9714285714285714,
+            "n": 105
+          },
+          "judged_fraction@5": {
+            "mean": 0.9657142857142857,
+            "n": 105
+          },
+          "judged_fraction@50": {
+            "mean": 0.9737844611528822,
+            "n": 105
+          },
+          "mrr@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "mrr@10": {
+            "mean": 0.934047619047619,
+            "n": 105
+          },
+          "mrr@20": {
+            "mean": 0.934047619047619,
+            "n": 105
+          },
+          "mrr@3": {
+            "mean": 0.926984126984127,
+            "n": 105
+          },
+          "mrr@5": {
+            "mean": 0.9312698412698412,
+            "n": 105
+          },
+          "mrr@50": {
+            "mean": 0.934047619047619,
+            "n": 105
+          },
+          "ndcg@1": {
+            "mean": 0.8476190476190476,
+            "n": 105
+          },
+          "ndcg@10": {
+            "mean": 0.8009515136939672,
+            "n": 105
+          },
+          "ndcg@20": {
+            "mean": 0.8261925454614153,
+            "n": 105
+          },
+          "ndcg@3": {
+            "mean": 0.7844447170354494,
+            "n": 105
+          },
+          "ndcg@5": {
+            "mean": 0.7833179574026901,
+            "n": 105
+          },
+          "ndcg@50": {
+            "mean": 0.8298379408190473,
+            "n": 105
+          },
+          "precision@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "precision@10": {
+            "mean": 0.2857142857142857,
+            "n": 105
+          },
+          "precision@20": {
+            "mean": 0.1719047619047619,
+            "n": 105
+          },
+          "precision@3": {
+            "mean": 0.6126984126984126,
+            "n": 105
+          },
+          "precision@5": {
+            "mean": 0.45714285714285713,
+            "n": 105
+          },
+          "precision@50": {
+            "mean": 0.07161904761904762,
+            "n": 105
+          },
+          "recall@1": {
+            "mean": 0.3689280749882254,
+            "n": 105
+          },
+          "recall@10": {
+            "mean": 0.7805794442260607,
+            "n": 105
+          },
+          "recall@20": {
+            "mean": 0.855205626175551,
+            "n": 105
+          },
+          "recall@3": {
+            "mean": 0.6145898501387224,
+            "n": 105
+          },
+          "recall@5": {
+            "mean": 0.6960222567741364,
+            "n": 105
+          },
+          "recall@50": {
+            "mean": 0.8675777530739937,
+            "n": 105
+          },
+          "relevant_total": {
+            "mean": 4.457142857142857,
+            "n": 105
+          },
+          "returned": {
+            "mean": 20.885714285714286,
+            "n": 105
+          },
+          "unjudged@1": {
+            "mean": 0.02857142857142857,
+            "n": 105
+          },
+          "unjudged@10": {
+            "mean": 0.29523809523809524,
+            "n": 105
+          },
+          "unjudged@20": {
+            "mean": 0.5142857142857142,
+            "n": 105
+          },
+          "unjudged@3": {
+            "mean": 0.08571428571428572,
+            "n": 105
+          },
+          "unjudged@5": {
+            "mean": 0.17142857142857143,
+            "n": 105
+          },
+          "unjudged@50": {
+            "mean": 0.5523809523809524,
+            "n": 105
+          }
+        },
+        "total": 105
+      },
+      "main_hyde": {
+        "candidates": {
+          "hit@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@3": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@5": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "judged_fraction@1": {
+            "mean": 0.9809523809523809,
+            "n": 105
+          },
+          "judged_fraction@10": {
+            "mean": 0.9695238095238096,
+            "n": 105
+          },
+          "judged_fraction@20": {
+            "mean": 0.9737844611528822,
+            "n": 105
+          },
+          "judged_fraction@3": {
+            "mean": 0.9619047619047619,
+            "n": 105
+          },
+          "judged_fraction@5": {
+            "mean": 0.9580952380952381,
+            "n": 105
+          },
+          "judged_fraction@50": {
+            "mean": 0.9754511278195489,
+            "n": 105
+          },
+          "mrr@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "mrr@10": {
+            "mean": 0.9444444444444444,
+            "n": 105
+          },
+          "mrr@20": {
+            "mean": 0.9444444444444444,
+            "n": 105
+          },
+          "mrr@3": {
+            "mean": 0.9444444444444444,
+            "n": 105
+          },
+          "mrr@5": {
+            "mean": 0.9444444444444444,
+            "n": 105
+          },
+          "mrr@50": {
+            "mean": 0.9444444444444444,
+            "n": 105
+          },
+          "ndcg@1": {
+            "mean": 0.8666666666666667,
+            "n": 105
+          },
+          "ndcg@10": {
+            "mean": 0.8278969176322121,
+            "n": 105
+          },
+          "ndcg@20": {
+            "mean": 0.8519322807298664,
+            "n": 105
+          },
+          "ndcg@3": {
+            "mean": 0.8280530272440876,
+            "n": 105
+          },
+          "ndcg@5": {
+            "mean": 0.8059696836677344,
+            "n": 105
+          },
+          "ndcg@50": {
+            "mean": 0.854400224389419,
+            "n": 105
+          },
+          "precision@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "precision@10": {
+            "mean": 0.2885714285714286,
+            "n": 105
+          },
+          "precision@20": {
+            "mean": 0.1757142857142857,
+            "n": 105
+          },
+          "precision@3": {
+            "mean": 0.6349206349206349,
+            "n": 105
+          },
+          "precision@5": {
+            "mean": 0.4552380952380953,
+            "n": 105
+          },
+          "precision@50": {
+            "mean": 0.07333333333333333,
+            "n": 105
+          },
+          "recall@1": {
+            "mean": 0.3634254294855799,
+            "n": 105
+          },
+          "recall@10": {
+            "mean": 0.7864012309049903,
+            "n": 105
+          },
+          "recall@20": {
+            "mean": 0.8790580594565557,
+            "n": 105
+          },
+          "recall@3": {
+            "mean": 0.6306768931430585,
+            "n": 105
+          },
+          "recall@5": {
+            "mean": 0.6942875078138236,
+            "n": 105
+          },
+          "recall@50": {
+            "mean": 0.8908361371293703,
+            "n": 105
+          },
+          "relevant_total": {
+            "mean": 4.457142857142857,
+            "n": 105
+          },
+          "returned": {
+            "mean": 20.885714285714286,
+            "n": 105
+          },
+          "unjudged@1": {
+            "mean": 0.01904761904761905,
+            "n": 105
+          },
+          "unjudged@10": {
+            "mean": 0.3047619047619048,
+            "n": 105
+          },
+          "unjudged@20": {
+            "mean": 0.49523809523809526,
+            "n": 105
+          },
+          "unjudged@3": {
+            "mean": 0.11428571428571428,
+            "n": 105
+          },
+          "unjudged@5": {
+            "mean": 0.20952380952380953,
+            "n": 105
+          },
+          "unjudged@50": {
+            "mean": 0.5142857142857142,
+            "n": 105
+          }
+        },
+        "ranking": {
+          "hit@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@3": {
+            "mean": 0.9809523809523809,
+            "n": 105
+          },
+          "hit@5": {
+            "mean": 0.9904761904761905,
+            "n": 105
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "judged_fraction@1": {
+            "mean": 0.9714285714285714,
+            "n": 105
+          },
+          "judged_fraction@10": {
+            "mean": 0.9723809523809523,
+            "n": 105
+          },
+          "judged_fraction@20": {
+            "mean": 0.9742606516290727,
+            "n": 105
+          },
+          "judged_fraction@3": {
+            "mean": 0.9714285714285714,
+            "n": 105
+          },
+          "judged_fraction@5": {
+            "mean": 0.9657142857142857,
+            "n": 105
+          },
+          "judged_fraction@50": {
+            "mean": 0.9754511278195489,
+            "n": 105
+          },
+          "mrr@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "mrr@10": {
+            "mean": 0.9365986394557824,
+            "n": 105
+          },
+          "mrr@20": {
+            "mean": 0.9365986394557824,
+            "n": 105
+          },
+          "mrr@3": {
+            "mean": 0.9333333333333333,
+            "n": 105
+          },
+          "mrr@5": {
+            "mean": 0.9352380952380952,
+            "n": 105
+          },
+          "mrr@50": {
+            "mean": 0.9365986394557824,
+            "n": 105
+          },
+          "ndcg@1": {
+            "mean": 0.8539682539682539,
+            "n": 105
+          },
+          "ndcg@10": {
+            "mean": 0.8122189655367212,
+            "n": 105
+          },
+          "ndcg@20": {
+            "mean": 0.8406705334644627,
+            "n": 105
+          },
+          "ndcg@3": {
+            "mean": 0.7981661613636739,
+            "n": 105
+          },
+          "ndcg@5": {
+            "mean": 0.7920577220154197,
+            "n": 105
+          },
+          "ndcg@50": {
+            "mean": 0.8437895878285292,
+            "n": 105
+          },
+          "precision@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "precision@10": {
+            "mean": 0.2895238095238095,
+            "n": 105
+          },
+          "precision@20": {
+            "mean": 0.17666666666666667,
+            "n": 105
+          },
+          "precision@3": {
+            "mean": 0.6285714285714286,
+            "n": 105
+          },
+          "precision@5": {
+            "mean": 0.46285714285714286,
+            "n": 105
+          },
+          "precision@50": {
+            "mean": 0.07333333333333333,
+            "n": 105
+          },
+          "recall@1": {
+            "mean": 0.3689280749882254,
+            "n": 105
+          },
+          "recall@10": {
+            "mean": 0.795361981377019,
+            "n": 105
+          },
+          "recall@20": {
+            "mean": 0.8790786420485669,
+            "n": 105
+          },
+          "recall@3": {
+            "mean": 0.6264152469641191,
+            "n": 105
+          },
+          "recall@5": {
+            "mean": 0.7034825742344539,
+            "n": 105
+          },
+          "recall@50": {
+            "mean": 0.8908361371293703,
+            "n": 105
+          },
+          "relevant_total": {
+            "mean": 4.457142857142857,
+            "n": 105
+          },
+          "returned": {
+            "mean": 20.885714285714286,
+            "n": 105
+          },
+          "unjudged@1": {
+            "mean": 0.02857142857142857,
+            "n": 105
+          },
+          "unjudged@10": {
+            "mean": 0.2761904761904762,
+            "n": 105
+          },
+          "unjudged@20": {
+            "mean": 0.4857142857142857,
+            "n": 105
+          },
+          "unjudged@3": {
+            "mean": 0.08571428571428572,
+            "n": 105
+          },
+          "unjudged@5": {
+            "mean": 0.17142857142857143,
+            "n": 105
+          },
+          "unjudged@50": {
+            "mean": 0.5142857142857142,
+            "n": 105
+          }
+        },
+        "total": 105
+      },
+      "main_subquery": {
+        "candidates": {
+          "hit@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@3": {
+            "mean": 0.9714285714285714,
+            "n": 105
+          },
+          "hit@5": {
+            "mean": 0.9904761904761905,
+            "n": 105
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "judged_fraction@1": {
+            "mean": 0.9809523809523809,
+            "n": 105
+          },
+          "judged_fraction@10": {
+            "mean": 0.9676190476190476,
+            "n": 105
+          },
+          "judged_fraction@20": {
+            "mean": 0.9737844611528822,
+            "n": 105
+          },
+          "judged_fraction@3": {
+            "mean": 0.9682539682539683,
+            "n": 105
+          },
+          "judged_fraction@5": {
+            "mean": 0.96,
+            "n": 105
+          },
+          "judged_fraction@50": {
+            "mean": 0.9744987468671679,
+            "n": 105
+          },
+          "mrr@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "mrr@10": {
+            "mean": 0.9396825396825397,
+            "n": 105
+          },
+          "mrr@20": {
+            "mean": 0.9396825396825397,
+            "n": 105
+          },
+          "mrr@3": {
+            "mean": 0.9333333333333333,
+            "n": 105
+          },
+          "mrr@5": {
+            "mean": 0.9380952380952381,
+            "n": 105
+          },
+          "mrr@50": {
+            "mean": 0.9396825396825397,
+            "n": 105
+          },
+          "ndcg@1": {
+            "mean": 0.8666666666666667,
+            "n": 105
+          },
+          "ndcg@10": {
+            "mean": 0.8266297914376207,
+            "n": 105
+          },
+          "ndcg@20": {
+            "mean": 0.8438563885439226,
+            "n": 105
+          },
+          "ndcg@3": {
+            "mean": 0.8067310936392688,
+            "n": 105
+          },
+          "ndcg@5": {
+            "mean": 0.7967078375330425,
+            "n": 105
+          },
+          "ndcg@50": {
+            "mean": 0.8472954009843344,
+            "n": 105
+          },
+          "precision@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "precision@10": {
+            "mean": 0.2923809523809524,
+            "n": 105
+          },
+          "precision@20": {
+            "mean": 0.1719047619047619,
+            "n": 105
+          },
+          "precision@3": {
+            "mean": 0.6031746031746031,
+            "n": 105
+          },
+          "precision@5": {
+            "mean": 0.44761904761904764,
+            "n": 105
+          },
+          "precision@50": {
+            "mean": 0.07180952380952381,
+            "n": 105
+          },
+          "recall@1": {
+            "mean": 0.3697746358347862,
+            "n": 105
+          },
+          "recall@10": {
+            "mean": 0.8006839217591097,
+            "n": 105
+          },
+          "recall@20": {
+            "mean": 0.8595971054843236,
+            "n": 105
+          },
+          "recall@3": {
+            "mean": 0.6170584820359256,
+            "n": 105
+          },
+          "recall@5": {
+            "mean": 0.6884481619744778,
+            "n": 105
+          },
+          "recall@50": {
+            "mean": 0.8753258779649757,
+            "n": 105
+          },
+          "relevant_total": {
+            "mean": 4.457142857142857,
+            "n": 105
+          },
+          "returned": {
+            "mean": 20.885714285714286,
+            "n": 105
+          },
+          "unjudged@1": {
+            "mean": 0.01904761904761905,
+            "n": 105
+          },
+          "unjudged@10": {
+            "mean": 0.3238095238095238,
+            "n": 105
+          },
+          "unjudged@20": {
+            "mean": 0.49523809523809526,
+            "n": 105
+          },
+          "unjudged@3": {
+            "mean": 0.09523809523809523,
+            "n": 105
+          },
+          "unjudged@5": {
+            "mean": 0.2,
+            "n": 105
+          },
+          "unjudged@50": {
+            "mean": 0.5428571428571428,
+            "n": 105
+          }
+        },
+        "ranking": {
+          "hit@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@3": {
+            "mean": 0.9619047619047619,
+            "n": 105
+          },
+          "hit@5": {
+            "mean": 0.9809523809523809,
+            "n": 105
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "judged_fraction@1": {
+            "mean": 0.9714285714285714,
+            "n": 105
+          },
+          "judged_fraction@10": {
+            "mean": 0.9704761904761905,
+            "n": 105
+          },
+          "judged_fraction@20": {
+            "mean": 0.9737844611528822,
+            "n": 105
+          },
+          "judged_fraction@3": {
+            "mean": 0.9714285714285714,
+            "n": 105
+          },
+          "judged_fraction@5": {
+            "mean": 0.9657142857142857,
+            "n": 105
+          },
+          "judged_fraction@50": {
+            "mean": 0.9744987468671679,
+            "n": 105
+          },
+          "mrr@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "mrr@10": {
+            "mean": 0.934047619047619,
+            "n": 105
+          },
+          "mrr@20": {
+            "mean": 0.934047619047619,
+            "n": 105
+          },
+          "mrr@3": {
+            "mean": 0.926984126984127,
+            "n": 105
+          },
+          "mrr@5": {
+            "mean": 0.9312698412698412,
+            "n": 105
+          },
+          "mrr@50": {
+            "mean": 0.934047619047619,
+            "n": 105
+          },
+          "ndcg@1": {
+            "mean": 0.8476190476190476,
+            "n": 105
+          },
+          "ndcg@10": {
+            "mean": 0.8009114218212657,
+            "n": 105
+          },
+          "ndcg@20": {
+            "mean": 0.8272213788916157,
+            "n": 105
+          },
+          "ndcg@3": {
+            "mean": 0.7844447170354494,
+            "n": 105
+          },
+          "ndcg@5": {
+            "mean": 0.7815102224858452,
+            "n": 105
+          },
+          "ndcg@50": {
+            "mean": 0.8314925494002382,
+            "n": 105
+          },
+          "precision@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "precision@10": {
+            "mean": 0.28476190476190477,
+            "n": 105
+          },
+          "precision@20": {
+            "mean": 0.1719047619047619,
+            "n": 105
+          },
+          "precision@3": {
+            "mean": 0.6126984126984126,
+            "n": 105
+          },
+          "precision@5": {
+            "mean": 0.45333333333333337,
+            "n": 105
+          },
+          "precision@50": {
+            "mean": 0.07180952380952381,
+            "n": 105
+          },
+          "recall@1": {
+            "mean": 0.3689280749882254,
+            "n": 105
+          },
+          "recall@10": {
+            "mean": 0.7792189000083737,
+            "n": 105
+          },
+          "recall@20": {
+            "mean": 0.8613664494792315,
+            "n": 105
+          },
+          "recall@3": {
+            "mean": 0.6145898501387224,
+            "n": 105
+          },
+          "recall@5": {
+            "mean": 0.6933767541286339,
+            "n": 105
+          },
+          "recall@50": {
+            "mean": 0.8753258779649757,
+            "n": 105
+          },
+          "relevant_total": {
+            "mean": 4.457142857142857,
+            "n": 105
+          },
+          "returned": {
+            "mean": 20.885714285714286,
+            "n": 105
+          },
+          "unjudged@1": {
+            "mean": 0.02857142857142857,
+            "n": 105
+          },
+          "unjudged@10": {
+            "mean": 0.29523809523809524,
+            "n": 105
+          },
+          "unjudged@20": {
+            "mean": 0.49523809523809526,
+            "n": 105
+          },
+          "unjudged@3": {
+            "mean": 0.08571428571428572,
+            "n": 105
+          },
+          "unjudged@5": {
+            "mean": 0.17142857142857143,
+            "n": 105
+          },
+          "unjudged@50": {
+            "mean": 0.5428571428571428,
+            "n": 105
+          }
+        },
+        "total": 105
+      },
+      "main_hyde_subquery": {
+        "candidates": {
+          "hit@1": {
+            "mean": 0.9238095238095239,
+            "n": 105
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@3": {
+            "mean": 0.9904761904761905,
+            "n": 105
+          },
+          "hit@5": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "judged_fraction@1": {
+            "mean": 0.9809523809523809,
+            "n": 105
+          },
+          "judged_fraction@10": {
+            "mean": 0.9704761904761905,
+            "n": 105
+          },
+          "judged_fraction@20": {
+            "mean": 0.9747368421052631,
+            "n": 105
+          },
+          "judged_fraction@3": {
+            "mean": 0.9682539682539683,
+            "n": 105
+          },
+          "judged_fraction@5": {
+            "mean": 0.9580952380952381,
+            "n": 105
+          },
+          "judged_fraction@50": {
+            "mean": 0.9761654135338346,
+            "n": 105
+          },
+          "mrr@1": {
+            "mean": 0.9238095238095239,
+            "n": 105
+          },
+          "mrr@10": {
+            "mean": 0.9558730158730159,
+            "n": 105
+          },
+          "mrr@20": {
+            "mean": 0.9558730158730159,
+            "n": 105
+          },
+          "mrr@3": {
+            "mean": 0.953968253968254,
+            "n": 105
+          },
+          "mrr@5": {
+            "mean": 0.9558730158730159,
+            "n": 105
+          },
+          "mrr@50": {
+            "mean": 0.9558730158730159,
+            "n": 105
+          },
+          "ndcg@1": {
+            "mean": 0.8984126984126984,
+            "n": 105
+          },
+          "ndcg@10": {
+            "mean": 0.8374282299719475,
+            "n": 105
+          },
+          "ndcg@20": {
+            "mean": 0.8590873007105306,
+            "n": 105
+          },
+          "ndcg@3": {
+            "mean": 0.8351428253563463,
+            "n": 105
+          },
+          "ndcg@5": {
+            "mean": 0.8168089262473532,
+            "n": 105
+          },
+          "ndcg@50": {
+            "mean": 0.8629671476358292,
+            "n": 105
+          },
+          "precision@1": {
+            "mean": 0.9238095238095239,
+            "n": 105
+          },
+          "precision@10": {
+            "mean": 0.2866666666666667,
+            "n": 105
+          },
+          "precision@20": {
+            "mean": 0.17476190476190476,
+            "n": 105
+          },
+          "precision@3": {
+            "mean": 0.6349206349206349,
+            "n": 105
+          },
+          "precision@5": {
+            "mean": 0.45714285714285713,
+            "n": 105
+          },
+          "precision@50": {
+            "mean": 0.07333333333333333,
+            "n": 105
+          },
+          "recall@1": {
+            "mean": 0.38120320726335766,
+            "n": 105
+          },
+          "recall@10": {
+            "mean": 0.7838199761808784,
+            "n": 105
+          },
+          "recall@20": {
+            "mean": 0.8749688682245074,
+            "n": 105
+          },
+          "recall@3": {
+            "mean": 0.6311795386457041,
+            "n": 105
+          },
+          "recall@5": {
+            "mean": 0.6923211778474936,
+            "n": 105
+          },
+          "recall@50": {
+            "mean": 0.8895913585161705,
+            "n": 105
+          },
+          "relevant_total": {
+            "mean": 4.457142857142857,
+            "n": 105
+          },
+          "returned": {
+            "mean": 20.885714285714286,
+            "n": 105
+          },
+          "unjudged@1": {
+            "mean": 0.01904761904761905,
+            "n": 105
+          },
+          "unjudged@10": {
+            "mean": 0.29523809523809524,
+            "n": 105
+          },
+          "unjudged@20": {
+            "mean": 0.47619047619047616,
+            "n": 105
+          },
+          "unjudged@3": {
+            "mean": 0.09523809523809523,
+            "n": 105
+          },
+          "unjudged@5": {
+            "mean": 0.20952380952380953,
+            "n": 105
+          },
+          "unjudged@50": {
+            "mean": 0.49523809523809526,
+            "n": 105
+          }
+        },
+        "ranking": {
+          "hit@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "hit@3": {
+            "mean": 0.9714285714285714,
+            "n": 105
+          },
+          "hit@5": {
+            "mean": 0.9809523809523809,
+            "n": 105
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 105
+          },
+          "judged_fraction@1": {
+            "mean": 0.9714285714285714,
+            "n": 105
+          },
+          "judged_fraction@10": {
+            "mean": 0.9704761904761905,
+            "n": 105
+          },
+          "judged_fraction@20": {
+            "mean": 0.9747368421052631,
+            "n": 105
+          },
+          "judged_fraction@3": {
+            "mean": 0.9714285714285714,
+            "n": 105
+          },
+          "judged_fraction@5": {
+            "mean": 0.9676190476190476,
+            "n": 105
+          },
+          "judged_fraction@50": {
+            "mean": 0.9761654135338346,
+            "n": 105
+          },
+          "mrr@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "mrr@10": {
+            "mean": 0.9348412698412698,
+            "n": 105
+          },
+          "mrr@20": {
+            "mean": 0.9348412698412698,
+            "n": 105
+          },
+          "mrr@3": {
+            "mean": 0.9301587301587302,
+            "n": 105
+          },
+          "mrr@5": {
+            "mean": 0.932063492063492,
+            "n": 105
+          },
+          "mrr@50": {
+            "mean": 0.9348412698412698,
+            "n": 105
+          },
+          "ndcg@1": {
+            "mean": 0.8539682539682539,
+            "n": 105
+          },
+          "ndcg@10": {
+            "mean": 0.8091327016276395,
+            "n": 105
+          },
+          "ndcg@20": {
+            "mean": 0.8378374043585322,
+            "n": 105
+          },
+          "ndcg@3": {
+            "mean": 0.7936968401634571,
+            "n": 105
+          },
+          "ndcg@5": {
+            "mean": 0.78797972216181,
+            "n": 105
+          },
+          "ndcg@50": {
+            "mean": 0.8410417443760358,
+            "n": 105
+          },
+          "precision@1": {
+            "mean": 0.9047619047619048,
+            "n": 105
+          },
+          "precision@10": {
+            "mean": 0.2876190476190476,
+            "n": 105
+          },
+          "precision@20": {
+            "mean": 0.1761904761904762,
+            "n": 105
+          },
+          "precision@3": {
+            "mean": 0.6222222222222222,
+            "n": 105
+          },
+          "precision@5": {
+            "mean": 0.45714285714285713,
+            "n": 105
+          },
+          "precision@50": {
+            "mean": 0.07333333333333333,
+            "n": 105
+          },
+          "recall@1": {
+            "mean": 0.3689280749882254,
+            "n": 105
+          },
+          "recall@10": {
+            "mean": 0.7933057043207419,
+            "n": 105
+          },
+          "recall@20": {
+            "mean": 0.8768035097734346,
+            "n": 105
+          },
+          "recall@3": {
+            "mean": 0.6233200088688811,
+            "n": 105
+          },
+          "recall@5": {
+            "mean": 0.6988000345519142,
+            "n": 105
+          },
+          "recall@50": {
+            "mean": 0.8895913585161705,
+            "n": 105
+          },
+          "relevant_total": {
+            "mean": 4.457142857142857,
+            "n": 105
+          },
+          "returned": {
+            "mean": 20.885714285714286,
+            "n": 105
+          },
+          "unjudged@1": {
+            "mean": 0.02857142857142857,
+            "n": 105
+          },
+          "unjudged@10": {
+            "mean": 0.29523809523809524,
+            "n": 105
+          },
+          "unjudged@20": {
+            "mean": 0.47619047619047616,
+            "n": 105
+          },
+          "unjudged@3": {
+            "mean": 0.08571428571428572,
+            "n": 105
+          },
+          "unjudged@5": {
+            "mean": 0.1619047619047619,
+            "n": 105
+          },
+          "unjudged@50": {
+            "mean": 0.49523809523809526,
+            "n": 105
+          }
+        },
+        "total": 105
+      }
+    },
+    "all": {
+      "main": {
+        "candidates": {
+          "hit@1": {
+            "mean": 0.864,
+            "n": 125
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@3": {
+            "mean": 0.968,
+            "n": 125
+          },
+          "hit@5": {
+            "mean": 0.984,
+            "n": 125
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "judged_fraction@1": {
+            "mean": 0.9846153846153847,
+            "n": 130
+          },
+          "judged_fraction@10": {
+            "mean": 0.9661538461538461,
+            "n": 130
+          },
+          "judged_fraction@20": {
+            "mean": 0.9692105263157894,
+            "n": 130
+          },
+          "judged_fraction@3": {
+            "mean": 0.958974358974359,
+            "n": 130
+          },
+          "judged_fraction@5": {
+            "mean": 0.9615384615384616,
+            "n": 130
+          },
+          "judged_fraction@50": {
+            "mean": 0.9693643724696356,
+            "n": 130
+          },
+          "mrr@1": {
+            "mean": 0.864,
+            "n": 125
+          },
+          "mrr@10": {
+            "mean": 0.9180761904761905,
+            "n": 125
+          },
+          "mrr@20": {
+            "mean": 0.9180761904761905,
+            "n": 125
+          },
+          "mrr@3": {
+            "mean": 0.912,
+            "n": 125
+          },
+          "mrr@5": {
+            "mean": 0.9156,
+            "n": 125
+          },
+          "mrr@50": {
+            "mean": 0.9180761904761905,
+            "n": 125
+          },
+          "ndcg@1": {
+            "mean": 0.8266666666666667,
+            "n": 125
+          },
+          "ndcg@10": {
+            "mean": 0.7960488051686202,
+            "n": 125
+          },
+          "ndcg@20": {
+            "mean": 0.8126739440265014,
+            "n": 125
+          },
+          "ndcg@3": {
+            "mean": 0.7875629717458802,
+            "n": 125
+          },
+          "ndcg@5": {
+            "mean": 0.7760930235272301,
+            "n": 125
+          },
+          "ndcg@50": {
+            "mean": 0.8152377755302346,
+            "n": 125
+          },
+          "precision@1": {
+            "mean": 0.864,
+            "n": 125
+          },
+          "precision@10": {
+            "mean": 0.3144,
+            "n": 125
+          },
+          "precision@20": {
+            "mean": 0.1912,
+            "n": 125
+          },
+          "precision@3": {
+            "mean": 0.6213333333333333,
+            "n": 125
+          },
+          "precision@5": {
+            "mean": 0.4736,
+            "n": 125
+          },
+          "precision@50": {
+            "mean": 0.08096,
+            "n": 125
+          },
+          "recall@1": {
+            "mean": 0.3258592912698176,
+            "n": 125
+          },
+          "recall@10": {
+            "mean": 0.7531141963173542,
+            "n": 125
+          },
+          "recall@20": {
+            "mean": 0.8141657019099124,
+            "n": 125
+          },
+          "recall@3": {
+            "mean": 0.574067563348616,
+            "n": 125
+          },
+          "recall@5": {
+            "mean": 0.644962420724526,
+            "n": 125
+          },
+          "recall@50": {
+            "mean": 0.8335009040177461,
+            "n": 125
+          },
+          "relevant_total": {
+            "mean": 5.638461538461539,
+            "n": 130
+          },
+          "returned": {
+            "mean": 20.06153846153846,
+            "n": 130
+          },
+          "unjudged@1": {
+            "mean": 0.015384615384615385,
+            "n": 130
+          },
+          "unjudged@10": {
+            "mean": 0.33076923076923076,
+            "n": 130
+          },
+          "unjudged@20": {
+            "mean": 0.5692307692307692,
+            "n": 130
+          },
+          "unjudged@3": {
+            "mean": 0.12307692307692308,
+            "n": 130
+          },
+          "unjudged@5": {
+            "mean": 0.19230769230769232,
+            "n": 130
+          },
+          "unjudged@50": {
+            "mean": 0.6230769230769231,
+            "n": 130
+          }
+        },
+        "ranking": {
+          "hit@1": {
+            "mean": 0.88,
+            "n": 125
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@3": {
+            "mean": 0.96,
+            "n": 125
+          },
+          "hit@5": {
+            "mean": 0.984,
+            "n": 125
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "judged_fraction@1": {
+            "mean": 0.9461538461538461,
+            "n": 130
+          },
+          "judged_fraction@10": {
+            "mean": 0.9669230769230769,
+            "n": 130
+          },
+          "judged_fraction@20": {
+            "mean": 0.9688259109311741,
+            "n": 130
+          },
+          "judged_fraction@3": {
+            "mean": 0.958974358974359,
+            "n": 130
+          },
+          "judged_fraction@5": {
+            "mean": 0.9584615384615385,
+            "n": 130
+          },
+          "judged_fraction@50": {
+            "mean": 0.9693643724696356,
+            "n": 130
+          },
+          "mrr@1": {
+            "mean": 0.88,
+            "n": 125
+          },
+          "mrr@10": {
+            "mean": 0.9226,
+            "n": 125
+          },
+          "mrr@20": {
+            "mean": 0.9226,
+            "n": 125
+          },
+          "mrr@3": {
+            "mean": 0.9146666666666666,
+            "n": 125
+          },
+          "mrr@5": {
+            "mean": 0.9202666666666667,
+            "n": 125
+          },
+          "mrr@50": {
+            "mean": 0.9226,
+            "n": 125
+          },
+          "ndcg@1": {
+            "mean": 0.8106666666666666,
+            "n": 125
+          },
+          "ndcg@10": {
+            "mean": 0.7726879862225234,
+            "n": 125
+          },
+          "ndcg@20": {
+            "mean": 0.7986406311424662,
+            "n": 125
+          },
+          "ndcg@3": {
+            "mean": 0.7568783301676235,
+            "n": 125
+          },
+          "ndcg@5": {
+            "mean": 0.757331963582775,
+            "n": 125
+          },
+          "ndcg@50": {
+            "mean": 0.801440411454055,
+            "n": 125
+          },
+          "precision@1": {
+            "mean": 0.88,
+            "n": 125
+          },
+          "precision@10": {
+            "mean": 0.3064,
+            "n": 125
+          },
+          "precision@20": {
+            "mean": 0.194,
+            "n": 125
+          },
+          "precision@3": {
+            "mean": 0.624,
+            "n": 125
+          },
+          "precision@5": {
+            "mean": 0.4768,
+            "n": 125
+          },
+          "precision@50": {
+            "mean": 0.08096,
+            "n": 125
+          },
+          "recall@1": {
+            "mean": 0.33158722777775407,
+            "n": 125
+          },
+          "recall@10": {
+            "mean": 0.7405126018757597,
+            "n": 125
+          },
+          "recall@20": {
+            "mean": 0.8203464126611495,
+            "n": 125
+          },
+          "recall@3": {
+            "mean": 0.5686612656223182,
+            "n": 125
+          },
+          "recall@5": {
+            "mean": 0.6558434739750529,
+            "n": 125
+          },
+          "recall@50": {
+            "mean": 0.8335009040177461,
+            "n": 125
+          },
+          "relevant_total": {
+            "mean": 5.638461538461539,
+            "n": 130
+          },
+          "returned": {
+            "mean": 20.06153846153846,
+            "n": 130
+          },
+          "unjudged@1": {
+            "mean": 0.05384615384615385,
+            "n": 130
+          },
+          "unjudged@10": {
+            "mean": 0.3230769230769231,
+            "n": 130
+          },
+          "unjudged@20": {
+            "mean": 0.5769230769230769,
+            "n": 130
+          },
+          "unjudged@3": {
+            "mean": 0.12307692307692308,
+            "n": 130
+          },
+          "unjudged@5": {
+            "mean": 0.2076923076923077,
+            "n": 130
+          },
+          "unjudged@50": {
+            "mean": 0.6230769230769231,
+            "n": 130
+          }
+        },
+        "total": 130
+      },
+      "main_hyde": {
+        "candidates": {
+          "hit@1": {
+            "mean": 0.888,
+            "n": 125
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@3": {
+            "mean": 0.992,
+            "n": 125
+          },
+          "hit@5": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "judged_fraction@1": {
+            "mean": 0.9846153846153847,
+            "n": 130
+          },
+          "judged_fraction@10": {
+            "mean": 0.9669230769230769,
+            "n": 130
+          },
+          "judged_fraction@20": {
+            "mean": 0.9703643724696356,
+            "n": 130
+          },
+          "judged_fraction@3": {
+            "mean": 0.9615384615384616,
+            "n": 130
+          },
+          "judged_fraction@5": {
+            "mean": 0.9584615384615385,
+            "n": 130
+          },
+          "judged_fraction@50": {
+            "mean": 0.9718643724696356,
+            "n": 130
+          },
+          "mrr@1": {
+            "mean": 0.888,
+            "n": 125
+          },
+          "mrr@10": {
+            "mean": 0.9349333333333333,
+            "n": 125
+          },
+          "mrr@20": {
+            "mean": 0.9349333333333333,
+            "n": 125
+          },
+          "mrr@3": {
+            "mean": 0.9333333333333333,
+            "n": 125
+          },
+          "mrr@5": {
+            "mean": 0.9349333333333333,
+            "n": 125
+          },
+          "mrr@50": {
+            "mean": 0.9349333333333333,
+            "n": 125
+          },
+          "ndcg@1": {
+            "mean": 0.856,
+            "n": 125
+          },
+          "ndcg@10": {
+            "mean": 0.8079283662812052,
+            "n": 125
+          },
+          "ndcg@20": {
+            "mean": 0.8278063286633052,
+            "n": 125
+          },
+          "ndcg@3": {
+            "mean": 0.8083354035887609,
+            "n": 125
+          },
+          "ndcg@5": {
+            "mean": 0.7859052118832943,
+            "n": 125
+          },
+          "ndcg@50": {
+            "mean": 0.8291245824927225,
+            "n": 125
+          },
+          "precision@1": {
+            "mean": 0.888,
+            "n": 125
+          },
+          "precision@10": {
+            "mean": 0.3176,
+            "n": 125
+          },
+          "precision@20": {
+            "mean": 0.198,
+            "n": 125
+          },
+          "precision@3": {
+            "mean": 0.6426666666666666,
+            "n": 125
+          },
+          "precision@5": {
+            "mean": 0.4752,
+            "n": 125
+          },
+          "precision@50": {
+            "mean": 0.08288,
+            "n": 125
+          },
+          "recall@1": {
+            "mean": 0.32814292763345393,
+            "n": 125
+          },
+          "recall@10": {
+            "mean": 0.7487910505742085,
+            "n": 125
+          },
+          "recall@20": {
+            "mean": 0.8416833575180943,
+            "n": 125
+          },
+          "recall@3": {
+            "mean": 0.5817229016944806,
+            "n": 125
+          },
+          "recall@5": {
+            "mean": 0.6528203201824254,
+            "n": 125
+          },
+          "recall@50": {
+            "mean": 0.8548388475251633,
+            "n": 125
+          },
+          "relevant_total": {
+            "mean": 5.638461538461539,
+            "n": 130
+          },
+          "returned": {
+            "mean": 20.06153846153846,
+            "n": 130
+          },
+          "unjudged@1": {
+            "mean": 0.015384615384615385,
+            "n": 130
+          },
+          "unjudged@10": {
+            "mean": 0.3230769230769231,
+            "n": 130
+          },
+          "unjudged@20": {
+            "mean": 0.5461538461538461,
+            "n": 130
+          },
+          "unjudged@3": {
+            "mean": 0.11538461538461539,
+            "n": 130
+          },
+          "unjudged@5": {
+            "mean": 0.2076923076923077,
+            "n": 130
+          },
+          "unjudged@50": {
+            "mean": 0.5692307692307692,
+            "n": 130
+          }
+        },
+        "ranking": {
+          "hit@1": {
+            "mean": 0.888,
+            "n": 125
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@3": {
+            "mean": 0.976,
+            "n": 125
+          },
+          "hit@5": {
+            "mean": 0.992,
+            "n": 125
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "judged_fraction@1": {
+            "mean": 0.9538461538461539,
+            "n": 130
+          },
+          "judged_fraction@10": {
+            "mean": 0.9692307692307692,
+            "n": 130
+          },
+          "judged_fraction@20": {
+            "mean": 0.9711336032388664,
+            "n": 130
+          },
+          "judged_fraction@3": {
+            "mean": 0.9615384615384616,
+            "n": 130
+          },
+          "judged_fraction@5": {
+            "mean": 0.96,
+            "n": 130
+          },
+          "judged_fraction@50": {
+            "mean": 0.9718643724696356,
+            "n": 130
+          },
+          "mrr@1": {
+            "mean": 0.888,
+            "n": 125
+          },
+          "mrr@10": {
+            "mean": 0.9287428571428571,
+            "n": 125
+          },
+          "mrr@20": {
+            "mean": 0.9287428571428571,
+            "n": 125
+          },
+          "mrr@3": {
+            "mean": 0.924,
+            "n": 125
+          },
+          "mrr@5": {
+            "mean": 0.9276,
+            "n": 125
+          },
+          "mrr@50": {
+            "mean": 0.9287428571428571,
+            "n": 125
+          },
+          "ndcg@1": {
+            "mean": 0.8186666666666667,
+            "n": 125
+          },
+          "ndcg@10": {
+            "mean": 0.7829264390341856,
+            "n": 125
+          },
+          "ndcg@20": {
+            "mean": 0.811343140974325,
+            "n": 125
+          },
+          "ndcg@3": {
+            "mean": 0.7690300483713625,
+            "n": 125
+          },
+          "ndcg@5": {
+            "mean": 0.7667069882994338,
+            "n": 125
+          },
+          "ndcg@50": {
+            "mean": 0.813798338733287,
+            "n": 125
+          },
+          "precision@1": {
+            "mean": 0.888,
+            "n": 125
+          },
+          "precision@10": {
+            "mean": 0.3112,
+            "n": 125
+          },
+          "precision@20": {
+            "mean": 0.1992,
+            "n": 125
+          },
+          "precision@3": {
+            "mean": 0.6373333333333333,
+            "n": 125
+          },
+          "precision@5": {
+            "mean": 0.4848,
+            "n": 125
+          },
+          "precision@50": {
+            "mean": 0.08288,
+            "n": 125
+          },
+          "recall@1": {
+            "mean": 0.33258722777775407,
+            "n": 125
+          },
+          "recall@10": {
+            "mean": 0.753837093489725,
+            "n": 125
+          },
+          "recall@20": {
+            "mean": 0.8422006468953838,
+            "n": 125
+          },
+          "recall@3": {
+            "mean": 0.5785945989556516,
+            "n": 125
+          },
+          "recall@5": {
+            "mean": 0.6636815692131481,
+            "n": 125
+          },
+          "recall@50": {
+            "mean": 0.8548388475251633,
+            "n": 125
+          },
+          "relevant_total": {
+            "mean": 5.638461538461539,
+            "n": 130
+          },
+          "returned": {
+            "mean": 20.06153846153846,
+            "n": 130
+          },
+          "unjudged@1": {
+            "mean": 0.046153846153846156,
+            "n": 130
+          },
+          "unjudged@10": {
+            "mean": 0.3,
+            "n": 130
+          },
+          "unjudged@20": {
+            "mean": 0.5307692307692308,
+            "n": 130
+          },
+          "unjudged@3": {
+            "mean": 0.11538461538461539,
+            "n": 130
+          },
+          "unjudged@5": {
+            "mean": 0.2,
+            "n": 130
+          },
+          "unjudged@50": {
+            "mean": 0.5692307692307692,
+            "n": 130
+          }
+        },
+        "total": 130
+      },
+      "main_subquery": {
+        "candidates": {
+          "hit@1": {
+            "mean": 0.896,
+            "n": 125
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@3": {
+            "mean": 0.976,
+            "n": 125
+          },
+          "hit@5": {
+            "mean": 0.992,
+            "n": 125
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "judged_fraction@1": {
+            "mean": 0.9769230769230769,
+            "n": 130
+          },
+          "judged_fraction@10": {
+            "mean": 0.9638461538461539,
+            "n": 130
+          },
+          "judged_fraction@20": {
+            "mean": 0.9688259109311741,
+            "n": 130
+          },
+          "judged_fraction@3": {
+            "mean": 0.9615384615384616,
+            "n": 130
+          },
+          "judged_fraction@5": {
+            "mean": 0.96,
+            "n": 130
+          },
+          "judged_fraction@50": {
+            "mean": 0.9695566801619433,
+            "n": 130
+          },
+          "mrr@1": {
+            "mean": 0.896,
+            "n": 125
+          },
+          "mrr@10": {
+            "mean": 0.936,
+            "n": 125
+          },
+          "mrr@20": {
+            "mean": 0.936,
+            "n": 125
+          },
+          "mrr@3": {
+            "mean": 0.9306666666666666,
+            "n": 125
+          },
+          "mrr@5": {
+            "mean": 0.9346666666666666,
+            "n": 125
+          },
+          "mrr@50": {
+            "mean": 0.936,
+            "n": 125
+          },
+          "ndcg@1": {
+            "mean": 0.8533333333333333,
+            "n": 125
+          },
+          "ndcg@10": {
+            "mean": 0.8011258090028919,
+            "n": 125
+          },
+          "ndcg@20": {
+            "mean": 0.8188063371177069,
+            "n": 125
+          },
+          "ndcg@3": {
+            "mean": 0.7893281190882189,
+            "n": 125
+          },
+          "ndcg@5": {
+            "mean": 0.7781925260419724,
+            "n": 125
+          },
+          "ndcg@50": {
+            "mean": 0.8217795113298143,
+            "n": 125
+          },
+          "precision@1": {
+            "mean": 0.896,
+            "n": 125
+          },
+          "precision@10": {
+            "mean": 0.3144,
+            "n": 125
+          },
+          "precision@20": {
+            "mean": 0.194,
+            "n": 125
+          },
+          "precision@3": {
+            "mean": 0.616,
+            "n": 125
+          },
+          "precision@5": {
+            "mean": 0.47200000000000003,
+            "n": 125
+          },
+          "precision@50": {
+            "mean": 0.08128,
+            "n": 125
+          },
+          "recall@1": {
+            "mean": 0.3342792912698176,
+            "n": 125
+          },
+          "recall@10": {
+            "mean": 0.7571062598094177,
+            "n": 125
+          },
+          "recall@20": {
+            "mean": 0.8244833072285704,
+            "n": 125
+          },
+          "recall@3": {
+            "mean": 0.5695691506502033,
+            "n": 125
+          },
+          "recall@5": {
+            "mean": 0.647897052759158,
+            "n": 125
+          },
+          "recall@50": {
+            "mean": 0.840957380874223,
+            "n": 125
+          },
+          "relevant_total": {
+            "mean": 5.638461538461539,
+            "n": 130
+          },
+          "returned": {
+            "mean": 20.06153846153846,
+            "n": 130
+          },
+          "unjudged@1": {
+            "mean": 0.023076923076923078,
+            "n": 130
+          },
+          "unjudged@10": {
+            "mean": 0.35384615384615387,
+            "n": 130
+          },
+          "unjudged@20": {
+            "mean": 0.5769230769230769,
+            "n": 130
+          },
+          "unjudged@3": {
+            "mean": 0.11538461538461539,
+            "n": 130
+          },
+          "unjudged@5": {
+            "mean": 0.2,
+            "n": 130
+          },
+          "unjudged@50": {
+            "mean": 0.6230769230769231,
+            "n": 130
+          }
+        },
+        "ranking": {
+          "hit@1": {
+            "mean": 0.88,
+            "n": 125
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@3": {
+            "mean": 0.96,
+            "n": 125
+          },
+          "hit@5": {
+            "mean": 0.984,
+            "n": 125
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "judged_fraction@1": {
+            "mean": 0.9461538461538461,
+            "n": 130
+          },
+          "judged_fraction@10": {
+            "mean": 0.9669230769230769,
+            "n": 130
+          },
+          "judged_fraction@20": {
+            "mean": 0.9692105263157894,
+            "n": 130
+          },
+          "judged_fraction@3": {
+            "mean": 0.958974358974359,
+            "n": 130
+          },
+          "judged_fraction@5": {
+            "mean": 0.9584615384615385,
+            "n": 130
+          },
+          "judged_fraction@50": {
+            "mean": 0.9695566801619433,
+            "n": 130
+          },
+          "mrr@1": {
+            "mean": 0.88,
+            "n": 125
+          },
+          "mrr@10": {
+            "mean": 0.9226,
+            "n": 125
+          },
+          "mrr@20": {
+            "mean": 0.9226,
+            "n": 125
+          },
+          "mrr@3": {
+            "mean": 0.9146666666666666,
+            "n": 125
+          },
+          "mrr@5": {
+            "mean": 0.9202666666666667,
+            "n": 125
+          },
+          "mrr@50": {
+            "mean": 0.9226,
+            "n": 125
+          },
+          "ndcg@1": {
+            "mean": 0.8106666666666666,
+            "n": 125
+          },
+          "ndcg@10": {
+            "mean": 0.7741791957061914,
+            "n": 125
+          },
+          "ndcg@20": {
+            "mean": 0.801379665138306,
+            "n": 125
+          },
+          "ndcg@3": {
+            "mean": 0.7576200613584082,
+            "n": 125
+          },
+          "ndcg@5": {
+            "mean": 0.7560680399890153,
+            "n": 125
+          },
+          "ndcg@50": {
+            "mean": 0.8031910774077714,
+            "n": 125
+          },
+          "precision@1": {
+            "mean": 0.88,
+            "n": 125
+          },
+          "precision@10": {
+            "mean": 0.308,
+            "n": 125
+          },
+          "precision@20": {
+            "mean": 0.1964,
+            "n": 125
+          },
+          "precision@3": {
+            "mean": 0.6266666666666666,
+            "n": 125
+          },
+          "precision@5": {
+            "mean": 0.4736,
+            "n": 125
+          },
+          "precision@50": {
+            "mean": 0.08128,
+            "n": 125
+          },
+          "recall@1": {
+            "mean": 0.33158722777775407,
+            "n": 125
+          },
+          "recall@10": {
+            "mean": 0.7409931213562793,
+            "n": 125
+          },
+          "recall@20": {
+            "mean": 0.8287314609461978,
+            "n": 125
+          },
+          "recall@3": {
+            "mean": 0.5689036898647425,
+            "n": 125
+          },
+          "recall@5": {
+            "mean": 0.6534827236143026,
+            "n": 125
+          },
+          "recall@50": {
+            "mean": 0.840957380874223,
+            "n": 125
+          },
+          "relevant_total": {
+            "mean": 5.638461538461539,
+            "n": 130
+          },
+          "returned": {
+            "mean": 20.06153846153846,
+            "n": 130
+          },
+          "unjudged@1": {
+            "mean": 0.05384615384615385,
+            "n": 130
+          },
+          "unjudged@10": {
+            "mean": 0.3230769230769231,
+            "n": 130
+          },
+          "unjudged@20": {
+            "mean": 0.5692307692307692,
+            "n": 130
+          },
+          "unjudged@3": {
+            "mean": 0.12307692307692308,
+            "n": 130
+          },
+          "unjudged@5": {
+            "mean": 0.2076923076923077,
+            "n": 130
+          },
+          "unjudged@50": {
+            "mean": 0.6230769230769231,
+            "n": 130
+          }
+        },
+        "total": 130
+      },
+      "main_hyde_subquery": {
+        "candidates": {
+          "hit@1": {
+            "mean": 0.904,
+            "n": 125
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@3": {
+            "mean": 0.992,
+            "n": 125
+          },
+          "hit@5": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "judged_fraction@1": {
+            "mean": 0.9769230769230769,
+            "n": 130
+          },
+          "judged_fraction@10": {
+            "mean": 0.9676923076923077,
+            "n": 130
+          },
+          "judged_fraction@20": {
+            "mean": 0.9699797570850203,
+            "n": 130
+          },
+          "judged_fraction@3": {
+            "mean": 0.9641025641025641,
+            "n": 130
+          },
+          "judged_fraction@5": {
+            "mean": 0.9553846153846154,
+            "n": 130
+          },
+          "judged_fraction@50": {
+            "mean": 0.9716720647773279,
+            "n": 130
+          },
+          "mrr@1": {
+            "mean": 0.904,
+            "n": 125
+          },
+          "mrr@10": {
+            "mean": 0.9442666666666667,
+            "n": 125
+          },
+          "mrr@20": {
+            "mean": 0.9442666666666667,
+            "n": 125
+          },
+          "mrr@3": {
+            "mean": 0.9426666666666667,
+            "n": 125
+          },
+          "mrr@5": {
+            "mean": 0.9442666666666667,
+            "n": 125
+          },
+          "mrr@50": {
+            "mean": 0.9442666666666667,
+            "n": 125
+          },
+          "ndcg@1": {
+            "mean": 0.8773333333333333,
+            "n": 125
+          },
+          "ndcg@10": {
+            "mean": 0.8130995981348341,
+            "n": 125
+          },
+          "ndcg@20": {
+            "mean": 0.8336449558913248,
+            "n": 125
+          },
+          "ndcg@3": {
+            "mean": 0.8156741618059814,
+            "n": 125
+          },
+          "ndcg@5": {
+            "mean": 0.7942941045124849,
+            "n": 125
+          },
+          "ndcg@50": {
+            "mean": 0.8362400031390975,
+            "n": 125
+          },
+          "precision@1": {
+            "mean": 0.904,
+            "n": 125
+          },
+          "precision@10": {
+            "mean": 0.312,
+            "n": 125
+          },
+          "precision@20": {
+            "mean": 0.198,
+            "n": 125
+          },
+          "precision@3": {
+            "mean": 0.648,
+            "n": 125
+          },
+          "precision@5": {
+            "mean": 0.4752,
+            "n": 125
+          },
+          "precision@50": {
+            "mean": 0.08304,
+            "n": 125
+          },
+          "recall@1": {
+            "mean": 0.3430762609667873,
+            "n": 125
+          },
+          "recall@10": {
+            "mean": 0.7454124069955649,
+            "n": 125
+          },
+          "recall@20": {
+            "mean": 0.8395947572294941,
+            "n": 125
+          },
+          "recall@3": {
+            "mean": 0.5844308382024171,
+            "n": 125
+          },
+          "recall@5": {
+            "mean": 0.6518309406730459,
+            "n": 125
+          },
+          "recall@50": {
+            "mean": 0.8545205062173483,
+            "n": 125
+          },
+          "relevant_total": {
+            "mean": 5.638461538461539,
+            "n": 130
+          },
+          "returned": {
+            "mean": 20.06153846153846,
+            "n": 130
+          },
+          "unjudged@1": {
+            "mean": 0.023076923076923078,
+            "n": 130
+          },
+          "unjudged@10": {
+            "mean": 0.3153846153846154,
+            "n": 130
+          },
+          "unjudged@20": {
+            "mean": 0.5538461538461539,
+            "n": 130
+          },
+          "unjudged@3": {
+            "mean": 0.1076923076923077,
+            "n": 130
+          },
+          "unjudged@5": {
+            "mean": 0.2230769230769231,
+            "n": 130
+          },
+          "unjudged@50": {
+            "mean": 0.5692307692307692,
+            "n": 130
+          }
+        },
+        "ranking": {
+          "hit@1": {
+            "mean": 0.88,
+            "n": 125
+          },
+          "hit@10": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@20": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "hit@3": {
+            "mean": 0.968,
+            "n": 125
+          },
+          "hit@5": {
+            "mean": 0.984,
+            "n": 125
+          },
+          "hit@50": {
+            "mean": 1.0,
+            "n": 125
+          },
+          "judged_fraction@1": {
+            "mean": 0.9461538461538461,
+            "n": 130
+          },
+          "judged_fraction@10": {
+            "mean": 0.9669230769230769,
+            "n": 130
+          },
+          "judged_fraction@20": {
+            "mean": 0.970748987854251,
+            "n": 130
+          },
+          "judged_fraction@3": {
+            "mean": 0.958974358974359,
+            "n": 130
+          },
+          "judged_fraction@5": {
+            "mean": 0.96,
+            "n": 130
+          },
+          "judged_fraction@50": {
+            "mean": 0.9716720647773279,
+            "n": 130
+          },
+          "mrr@1": {
+            "mean": 0.88,
+            "n": 125
+          },
+          "mrr@10": {
+            "mean": 0.9232666666666667,
+            "n": 125
+          },
+          "mrr@20": {
+            "mean": 0.9232666666666667,
+            "n": 125
+          },
+          "mrr@3": {
+            "mean": 0.9173333333333333,
+            "n": 125
+          },
+          "mrr@5": {
+            "mean": 0.9209333333333334,
+            "n": 125
+          },
+          "mrr@50": {
+            "mean": 0.9232666666666667,
+            "n": 125
+          },
+          "ndcg@1": {
+            "mean": 0.816,
+            "n": 125
+          },
+          "ndcg@10": {
+            "mean": 0.7796263364772003,
+            "n": 125
+          },
+          "ndcg@20": {
+            "mean": 0.8098151390613382,
+            "n": 125
+          },
+          "ndcg@3": {
+            "mean": 0.76465011359515,
+            "n": 125
+          },
+          "ndcg@5": {
+            "mean": 0.7632250434531646,
+            "n": 125
+          },
+          "ndcg@50": {
+            "mean": 0.8116566245439805,
+            "n": 125
+          },
+          "precision@1": {
+            "mean": 0.88,
+            "n": 125
+          },
+          "precision@10": {
+            "mean": 0.3088,
+            "n": 125
+          },
+          "precision@20": {
+            "mean": 0.2,
+            "n": 125
+          },
+          "precision@3": {
+            "mean": 0.632,
+            "n": 125
+          },
+          "precision@5": {
+            "mean": 0.48160000000000003,
+            "n": 125
+          },
+          "precision@50": {
+            "mean": 0.08304,
+            "n": 125
+          },
+          "recall@1": {
+            "mean": 0.33158722777775407,
+            "n": 125
+          },
+          "recall@10": {
+            "mean": 0.7521098207624524,
+            "n": 125
+          },
+          "recall@20": {
+            "mean": 0.8420168085115454,
+            "n": 125
+          },
+          "recall@3": {
+            "mean": 0.5759945989556515,
+            "n": 125
+          },
+          "recall@5": {
+            "mean": 0.6599906601222391,
+            "n": 125
+          },
+          "recall@50": {
+            "mean": 0.8545205062173483,
+            "n": 125
+          },
+          "relevant_total": {
+            "mean": 5.638461538461539,
+            "n": 130
+          },
+          "returned": {
+            "mean": 20.06153846153846,
+            "n": 130
+          },
+          "unjudged@1": {
+            "mean": 0.05384615384615385,
+            "n": 130
+          },
+          "unjudged@10": {
+            "mean": 0.3230769230769231,
+            "n": 130
+          },
+          "unjudged@20": {
+            "mean": 0.5384615384615384,
+            "n": 130
+          },
+          "unjudged@3": {
+            "mean": 0.12307692307692308,
+            "n": 130
+          },
+          "unjudged@5": {
+            "mean": 0.2,
+            "n": 130
+          },
+          "unjudged@50": {
+            "mean": 0.5692307692307692,
+            "n": 130
+          }
+        },
+        "total": 130
+      }
+    }
+  }
+}

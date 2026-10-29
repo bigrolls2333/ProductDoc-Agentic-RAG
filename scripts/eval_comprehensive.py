@@ -544,10 +544,8 @@ def _eval_item_identity(expected: Dict[str, Any], state: Dict[str, Any], resolve
 
 
 def _eval_doc_need(expected: Dict[str, Any], state: Dict[str, Any]) -> Dict[str, Any]:
-    actual = state.get("doc_need_route", "")
-    exp = expected.get("doc_need_route", "")
-    passed = actual == exp
-    return {"passed": passed, "expected": exp, "actual": actual}
+    from app.evaluation.legacy import compare_doc_need
+    return compare_doc_need(expected.get("doc_need_route", ""), state.get("doc_need_route", ""))
 
 
 def _eval_retrieval_plan_check(expected: Dict[str, Any], state: Dict[str, Any]) -> Dict[str, Any]:
@@ -621,6 +619,8 @@ def _build_judge_artifacts(sample: Dict[str, Any], state: Dict[str, Any], max_ch
     answer = state.get("answer") or ""
     return {
         "artifact_schema": "judge_artifacts.v1",
+        "answer_context_trace": state.get("answer_context_trace") or {},
+        "answer_context_docs": state.get("answer_context_docs") or [],
         "sample": {
             "id": sample.get("id", ""),
             "category": sample.get("category", ""),

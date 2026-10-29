@@ -12,12 +12,20 @@ class QueryGraphState(TypedDict):
     # Retrieval results
     embedding_chunks: list  # Dense/sparse retrieval results
     hyde_embedding_chunks: list  # HyDE retrieval results
+    subquery_chunks: list  # One ranked list per validated planner subquery
+    subquery_trace: dict  # Expansion status, requests and failures
+    subquery_retrieval_enabled: bool | None  # None uses SUBQUERY_RETRIEVAL_ENABLED
     web_search_docs: list  # Web search results
 
     # Ranking results
     rrf_chunks: list  # RRF-fused chunks
     reranked_docs: list  # Final reranked Top-K documents
+    context_candidate_docs: list  # Complete bounded ranking for optional context policies
+    context_selection_policy: str  # ranked / budgeted / item_balanced (balanced is an alias)
+    context_per_item_k: int | None  # Per-item candidate cap; None uses configuration
     rerank_trace: dict  # Rerank and truncation summary
+    answer_context_docs: list  # Exact document texts included in the generation prompt
+    answer_context_trace: dict  # Context inclusion, omission and prompt fingerprint
 
     # Generation fields
     prompt: str  # Rendered answer prompt
@@ -59,10 +67,18 @@ query_graph_default_state: QueryGraphState = {
     "original_query": "",
     "embedding_chunks": [],
     "hyde_embedding_chunks": [],
+    "subquery_chunks": [],
+    "subquery_trace": {},
+    "subquery_retrieval_enabled": None,
     "web_search_docs": [],
     "rrf_chunks": [],
     "reranked_docs": [],
+    "context_candidate_docs": [],
+    "context_selection_policy": "",
+    "context_per_item_k": None,
     "rerank_trace": {},
+    "answer_context_docs": [],
+    "answer_context_trace": {},
     "prompt": "",
     "answer": "",
     "item_names": [],

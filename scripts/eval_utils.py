@@ -315,23 +315,8 @@ def compare_item_identity(
 
 
 def compare_retrieval_plan(expected: Dict[str, Any], actual: Dict[str, Any]) -> Tuple[bool, Dict[str, Any]]:
-    hard_keys = ["use_embedding", "use_hyde", "use_web"]
-    soft_keys: List[str] = []
-    hard_diff = {}
-    soft_diff = {}
-
-    for key in hard_keys:
-        if expected.get(key) != actual.get(key):
-            hard_diff[key] = {"expected": expected.get(key), "actual": actual.get(key)}
-    for key in soft_keys:
-        if expected.get(key) != actual.get(key):
-            soft_diff[key] = {"expected": expected.get(key), "actual": actual.get(key)}
-
-    return len(hard_diff) == 0, {
-        "hard_diff": hard_diff,
-        "soft_diff": soft_diff,
-        "reason": {"expected": expected.get("reason"), "actual": actual.get("reason")},
-    }
+    from app.evaluation.legacy import compare_plan
+    return compare_plan(expected, actual)
 
 
 def seed_history(session_id: str, sample: Dict[str, Any]) -> None:

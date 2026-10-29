@@ -75,16 +75,20 @@ def step_1_merge_docs(state):
             logger.debug(f"Local evidence skipped because content is empty: index={i}")
             continue
 
-        doc_id = entity.get("chunk_id") or entity.get("id")
+        chunk_id = entity.get("chunk_id") or entity.get("id")
         title = entity.get("title") or entity.get("item_name") or ""
 
         doc_items.append({
             "text": content,
-            "doc_id": doc_id,
-            "chunk_id": doc_id,
+            "doc_id": entity.get("doc_id"),
+            "chunk_id": chunk_id,
+            "canonical_name": entity.get("canonical_name") or entity.get("item_name") or "",
+            "product_id": entity.get("product_id") or "",
+            "file_title": entity.get("file_title") or "",
             "title": title,
             "url": "",
             "source": "local",
+            "retrieval_sources": entity.get('retrieval_sources', []),
         })
 
     for i, doc in enumerate(web_docs):
@@ -138,6 +142,10 @@ def step_2_rerank_docs(state, doc_items):
                     "doc_id": item.get("doc_id"),
                     "url": item.get("url") or "",
                     "title": item.get("title") or "",
+                    "canonical_name": item.get("canonical_name") or "",
+                    "product_id": item.get("product_id") or "",
+                    "file_title": item.get("file_title") or "",
+                    "retrieval_sources": item.get('retrieval_sources', []),
                 }
             )
         scored_docs.sort(key=lambda x: x["score"], reverse=True)
@@ -153,6 +161,10 @@ def step_2_rerank_docs(state, doc_items):
                 "doc_id": x.get("doc_id"),
                 "url": x.get("url") or "",
                 "title": x.get("title") or "",
+                "canonical_name": x.get("canonical_name") or "",
+                "product_id": x.get("product_id") or "",
+                "file_title": x.get("file_title") or "",
+                "retrieval_sources": x.get('retrieval_sources', []),
             }
             for x in doc_items
         ]
@@ -249,13 +261,17 @@ def node_rerank(state):
               "doc_id": x.get("doc_id"),
               "url": x.get("url") or "",
               "title": x.get("title") or "",
+              "canonical_name": x.get("canonical_name") or "",
+              "product_id": x.get("product_id") or "",
+              "file_title": x.get("file_title") or "",
+              "retrieval_sources": x.get('retrieval_sources', []),
           }
           for x in doc_items
       ]
       topk_docs, rerank_trace = _apply_topk(scored_docs)
       rerank_trace["mode"] = "disabled"
       add_done_task(state['session_id'], sys._getframe().f_code.co_name, state.get("is_stream"))
-      return {"reranked_docs": topk_docs, "rerank_trace": rerank_trace}
+      return {"reranked_docs": topk_docs, "context_candidate_docs": scored_docs[:50], "rerank_trace": rerank_trace}
   scored_docs = step_2_rerank_docs(state, doc_items)
   topk_docs, rerank_trace = _apply_topk(scored_docs)
   rerank_trace["mode"] = "bge"
@@ -263,4 +279,4 @@ def node_rerank(state):
   logger.info(f"node_rerank completed: output={len(topk_docs)}")
 
   add_done_task(state['session_id'], sys._getframe().f_code.co_name, state.get("is_stream"))
-  return {"reranked_docs": topk_docs, "rerank_trace": rerank_trace}
+  return {"reranked_docs": topk_docs, "context_candidate_docs": scored_docs[:50], "rerank_trace": rerank_trace}
